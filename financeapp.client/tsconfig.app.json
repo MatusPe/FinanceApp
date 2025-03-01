@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    // ...
+    
+    "baseUrl": "../../WebStormsProjects/AppFinance",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "react": [ "./node_modules/@types/react" ],
+      "@app/*": ["./app/*"],
+      "@assets/*": ["./assets/*"],
+      "@components/*": ["./components/*"],
+      "@styles/*": ["./styles/*"],
+      "@utils/*": ["./utils/*"]
+    },
+    // ...
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
+}

@@ -1,0 +1,9 @@
+.ag-theme-quartz-dark .ag-header{
+    background: linear-gradient(to right, #3A3535, #1F1B1B)
+
+}
+
+.ag-theme-quartz-dark .ag-root-wrapper {
+    border: none; /* No external wrapper border */
+
+}
