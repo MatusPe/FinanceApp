@@ -1,5 +1,6 @@
 ﻿import {handleError} from "@/Helpers/handleError.jsx";
 import axios from 'axios';
+
 const api="https://localhost:44301/api/";
 
 export const LoginAPI=async (username, password)=>{
@@ -111,6 +112,27 @@ export const GetGroupedExpensesByMonthApi = async (year) => {
     }
 };
 
+export const GetTwoExpensesApi = async (TargetMonth, year) => {
+
+    
+    try {
+        console.log(TargetMonth, 'this is getTwoExpensesApi');
+        console.log(year, 'this is getTwoExpensesApi');
+        const data = await axios.get(
+            api + `Expenses/GetTwoExpensesdifference/${TargetMonth}/${year}`,
+
+            {
+
+                headers: { "Content-Type": "application/json" }
+            }
+        );
+        return data.data;
+    } catch (err) {
+        console.error('Request failed:', err);
+        handleError(err);
+    }
+};
+
 
 
 
@@ -145,6 +167,23 @@ export const GetExpensesbyIdApi = async (id) => {
         return data;
     } catch (err) {
         console.error('Request failed:', err);
+        handleError(err);
+    }
+};
+
+export const PostExpensesApi = async (expenses) => {
+    console.log(expenses, 'this is expenses');
+    try {
+        return await axios.post(
+            api + "Expenses",expenses,
+            // <-- Use expense directly
+            {
+                headers: {"Content-Type": "application/json"}
+            }
+        );
+    } catch (err) {
+        console.error('Request failed:', err);
+        console.log(expenses);
         handleError(err);
     }
 };
