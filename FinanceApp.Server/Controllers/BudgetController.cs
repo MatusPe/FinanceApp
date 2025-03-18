@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FinanceApp.Server.UserMappers;
+using Microsoft.AspNetCore.Mvc;
 using ReactApp2.Server.DateBase;
+using ReactApp2.Server.DTOs;
 using ReactApp2.Server.Entity;
 using ReactApp2.Server.Interface;
 
@@ -17,10 +19,10 @@ public class BudgetController: ControllerBase
         this.BudgetRepositary = BudgetRepositary;
         
     }
-    [HttpGet]
+    [HttpGet("getAllBudgetsByUser")]
     public async Task<IActionResult> GetALLBudget()
     {
-        var budget= await BudgetRepositary.GetAllBudgetAsync();
+        var budget= await BudgetRepositary.GetAllBudgetAsyncByUser();
         return Ok(budget);
     }
 
@@ -35,29 +37,29 @@ public class BudgetController: ControllerBase
         return Ok(budget);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddBudget([FromBody] Budget budget)
+    [HttpPost("addBudget")]
+    public async Task<IActionResult> AddBudget([FromBody] BudgetDTO budgetDto)
     {
         
-        await BudgetRepositary.AddBudgetAsync(budget);
+        var result=await BudgetRepositary.AddBudgetAsync(BudgetMapper.ToEntity(budgetDto));
+        return Ok(result);
         
-        return CreatedAtAction(nameof(GetBudgetById), new{id=budget.Id},budget);
     }
-    [HttpPut]
-    [Route("{id}")]
-    public async Task<IActionResult> UpdateBudget([FromRoute] int id, [FromBody] Budget budget)
+    [HttpPut("updateBudget/{id}")]
+    
+    public async Task<IActionResult> UpdateBudget([FromRoute] int id, [FromBody] BudgetDTO budgetDto)
     {
         var oldBudget =await BudgetRepositary.GetBudgetByIdAsync(id);
         if (oldBudget == null)
         {
             return NotFound();
         }
-        await BudgetRepositary.UpdateBudgetAsync(id, budget);
-        return Ok(oldBudget);
+        var result =await BudgetRepositary.UpdateBudgetAsync(id, BudgetMapper.ToEntity(budgetDto));
+        return Ok(result);
     }
 
-    [HttpDelete]
-    [Route("{id}")]
+    [HttpDelete("deleteBudget/{id}")]
+    
     public async Task<IActionResult> DeleteBudget([FromRoute] int id)
     {
         var budget = await BudgetRepositary.DeleteBudgetAsync(id);
@@ -67,5 +69,12 @@ public class BudgetController: ControllerBase
         }
        
         return NoContent();
-    } 
+    }
+
+    [HttpGet("getExpensesByBudgetApi/{category}/{duration}")]
+    public async Task<IActionResult> GetExpensesByBudgetApi([FromRoute] string category,[FromRoute] int duration)
+    {
+        var expenses=await BudgetRepositary.GetExpensesByBudgetAsync(category, duration);
+        return Ok(expenses);
+    }
 }

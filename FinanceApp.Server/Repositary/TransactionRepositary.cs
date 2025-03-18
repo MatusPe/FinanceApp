@@ -70,10 +70,9 @@ public class TransactionRepositary:ITransactionRepositary
         existingTransaction.Name = expenseTransaction.Name;
         existingTransaction.Price = expenseTransaction.Price;
         
-        existingTransaction.Taxis = expenseTransaction.Taxis;
-        existingTransaction.WithoutTaxis = expenseTransaction.WithoutTaxis;
+        existingTransaction.Taxes = expenseTransaction.Taxes;
+        existingTransaction.WithoutTaxes = expenseTransaction.WithoutTaxes;
         existingTransaction.Sender = expenseTransaction.Sender;
-        existingTransaction.Receiver = expenseTransaction.Receiver;
         existingTransaction.IBAN = expenseTransaction.IBAN;
         existingTransaction.VB = expenseTransaction.VB;
         existingTransaction.IBANSender = expenseTransaction.IBANSender;

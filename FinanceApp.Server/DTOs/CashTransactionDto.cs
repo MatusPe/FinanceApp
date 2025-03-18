@@ -9,7 +9,7 @@ public class CashTransactionDto
     public Double? Taxis { get; set; }
     public Double? WithoutTaxis { get; set; }
     public String? Sender { get; set; }
-    public String? Receiver { get; set; }
+    
     public String? Place { get; set; }
     public String? Country { get; set; }
     

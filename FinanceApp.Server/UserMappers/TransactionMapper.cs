@@ -13,7 +13,7 @@ public class TransactionMapper
             Type = expenses.Type,
             Category = expenses.Category,
             Name = expenses.Name,
-            Sender = expenses.Sender,
+            Receiver = expenses.Receiver,
             Price = expenses.Price,
             Date = expenses.Date,
             
@@ -28,7 +28,7 @@ public class TransactionMapper
             Type = expensesDto.Type,
             Category = expensesDto.Category,
             Name = expensesDto.Name,
-            Sender = expensesDto.Sender,
+            Receiver = expensesDto.Receiver,
             Price = expensesDto.Price,
             Date = expensesDto.Date,
             

@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
+import {Cell, PolarAngleAxis, PolarGrid, Radar, RadarChart} from "recharts"
 import {ButtonArrowRight, ButtonArrowLeft} from './ButtonArrows'
 
 import {
@@ -18,97 +18,39 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
+
+import {GetTwoExpensesApi} from "../Services/ApiService";
 
 
 const chartConfig = {
-
+    amountMonth: {
+        label: "Current Month",
+        color: "rgb(64, 224, 208)",
+        
+    },
+    amountTargetMonth: {
+        label: "Target Month",
+        color: "rgb(255, 0, 0)",
+        
+    },
 } satisfies ChartConfig
 
 
-function getData() {
-    return [
-
-        { Category: "Tesla", Name: "Model Y", Sender: "Tesla s.r.o", Price: 64950, Date: "2.12.2022" },
-        { Category: "Ford", Name: "F-Series", Sender: "Ford Motor Company", Price: 33850, Date: "15.5.2023" },
-        { Category: "Toyota", Name: "Corolla", Sender: "Toyota Motor Corporation", Price: 29600, Date: "10.12.2024" },
-        { Category: "Toyota", Name: "Corolla", Sender: "Toyota Motor Corporation", Price: 29600, Date: "10.01.2025" },
-        { Category: "Chevrolet", Name: "Bolt EV", Sender: "Chevrolet", Price: 35990, Date: "21.3.2021" },
-        { Category: "BMW", Name: "iX3", Sender: "BMW Group", Price: 71000, Date: "8.10.2023" },
-        { Category: "Nissan", Name: "Leaf", Sender: "Nissan Motor Co.", Price: 31990, Date: "5.6.2022" },
-        { Category: "Audi", Name: "e-tron", Sender: "Audi AG", Price: 86500, Date: "11.1.2023" },
-        { Category: "Mercedes-Benz", Name: "EQB", Sender: "Mercedes-Benz AG", Price: 56000, Date: "3.9.2022" },
-        { Category: "Volkswagen", Name: "ID.4", Sender: "Volkswagen AG", Price: 41990, Date: "7.8.2021" },
-        { Category: "Ford", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 42990, Date: "12.5.2022" },
-        { Category: "Hyundai", Name: "Ioniq 5", Sender: "Hyundai Motor Company", Price: 46000, Date: "19.2.2024" },
-        { Category: "Mercedes-Benz", Name: "EQB", Sender: "Mercedes-Benz AG", Price: 56000, Date: "3.9.2022" },
-        { Category: "Volkswagen", Name: "ID.4", Sender: "Volkswagen AG", Price: 41990, Date: "7.8.2021" },
-        { Category: "Ford", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 42990, Date: "12.5.2022" },
-        { Category: "Hyundai", Name: "Ioniq 5", Sender: "Hyundai Motor Company", Price: 46000, Date: "19.2.2024" },
-        { Category: "Mercedes-Benz", Name: "EQB", Sender: "Mercedes-Benz AG", Price: 56000, Date: "3.9.2022" },
-        { Category: "Volkswagen", Name: "ID.4", Sender: "Volkswagen AG", Price: 41990, Date: "7.8.2021" },
-        { Category: "Ford", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 42990, Date: "12.5.2022" },
-        { Category: "Hyundai", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 42990, Date: "12.12.2024" },
-        { Category: "newhunda", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 42990, Date: "12.12.2024" },
-        { Category: "newhunda", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 50990, Date: "01.1.2025" },
-        { Category: "newhunda", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 42990, Date: "01.1.2024" },
-        { Category: "BMW", Name: "iX3", Sender: "BMW Group", Price: 71000, Date: "15.11.2024" },
-        { Category: "Mercedes-Benz", Name: "EQB", Sender: "Mercedes-Benz AG", Price: 56000, Date: "25.10.2024" },
-        { Category: "Volkswagen", Name: "ID.4", Sender: "Volkswagen AG", Price: 41990, Date: "13.11.2024" },
-        { Category: "Hyundai", Name: "Ioniq 5", Sender: "Hyundai Motor Company", Price: 46000, Date: "1.10.2024" },
-        { Category: "Ford", Name: "Mustang Mach-E", Sender: "Ford Motor Company", Price: 42990, Date: "22.10.2024" },
-        { Category: "Toyota", Name: "Land Cruiser", Sender: "Toyota Motor Corporation", Price: 60000, Date: "5.11.2024" },
-        { Category: "Hyundai", Name: "Palisade", Sender: "Hyundai Motor Company", Price: 60000, Date: "20.11.2024" }
-
-
-    ];
-}
-
-
-
-function TransformaDate(data, target) {
-
-    const targetmouth = target.getMonth()
-    const targetYear = target.getFullYear()
-
-    return  data.reduce((acc, item) => {
-
-        const itemDate = new Date(item.Date.split('.').reverse().join('-'));
-        const currentDate=new Date();
-        const IdItem=(itemDate.getMonth()==currentDate.getMonth()&&itemDate.getFullYear()==currentDate.getFullYear())?'CurrentMonth':'other';
-        const category = item.Category;
-
-        if (
-            (itemDate.getMonth() !== targetmouth || itemDate.getFullYear() !== targetYear) &&
-            (itemDate.getMonth() !== currentDate.getMonth() || itemDate.getFullYear() !== currentDate.getFullYear())
-        ) {
-            console.log(itemDate.getMonth());
-            return acc;
-        }
 
 
 
 
-        if (!acc[category]) {
-            acc[category] = {};
-            acc[category]['CurrentMonth'] = 0
-            acc[category]['other'] = 0
 
-        }
-
-        acc[category][IdItem] += item.Price;
-
-        return acc;
-    }, {});
-
-}
 
 
 function RadarComponent() {
+    const [ChartData, setChartData] = useState([])
 
     const [selectedDate, setSelectedDate] = useState(() => {
         const date = new Date();
         date.setMonth(date.getMonth() - 1);
+        console.log('letsgoo');
         return date;
     });
 
@@ -120,14 +62,37 @@ function RadarComponent() {
 
     }
 
-    const transform=TransformaDate(getData(), selectedDate)
+    useEffect(() => {
+        const GetData= async ()=>{
+            try {
+                console.log(selectedDate);
+                console.log("madness");
+                console.log(selectedDate.getMonth());
+                var data=await GetTwoExpensesApi(selectedDate.getMonth()+1, selectedDate.getFullYear());
+                console.log(data, 'madman');
+                setChartData(data);
+            }catch (error) {
+                console.error("Error fetching month expenses:", error);
+            }
+            
+        }
+        GetData();
+        
+    }, [selectedDate]);
 
-    const chartDataone = Object.entries(transform).map(([category, values]) => ({
-        category,
-        CurrentMonth: values.CurrentMonth,
-        other: values.other
-    }));
 
+    const normalizedData = ChartData.map(data => {
+        const maxValue = Math.max(data.amountMonth, data.amountTargetMonth); // Find the maximum value in the current category
+        return {
+            category: data.category,
+            amountMonth: data.amountMonth / maxValue, // Normalize amountMonth
+            amountTargetMonth: data.amountTargetMonth / maxValue, // Normalize amountTargetMonth
+        };
+    });
+
+    
+    
+    
     return (
 
 
@@ -147,19 +112,61 @@ function RadarComponent() {
                     config={chartConfig}
                     className=" w-full h-full pb-0 mx-auto min-h-full min-w-full p-0 m-0"
                 >
-                    <RadarChart data={chartDataone} className=" w-full h-full p-0 m-0  ">
+                    <RadarChart data={normalizedData} className=" w-full h-full p-0 m-0  ">
+                        <defs>
+                            <linearGradient id="BoldRadarGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#FF0000" stopOpacity="1" /> 
+                                <stop offset="100%" stopColor="#B22222" stopOpacity="1" />
+                            </linearGradient>
+
+                            <linearGradient id="BoldRadarGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#0000FF" stopOpacity="1" /> 
+                                <stop offset="100%" stopColor="#1E90FF" stopOpacity="1" />
+                            </linearGradient>
+
+
+                            
+
+                        </defs>
                         <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent indicator="line"/>}
+                            content={
+                                <ChartTooltipContent
+                                    hideLabel
+                                    formatter={(value, name, item, index) => {
+                                        const originalData = ChartData.find(data => data.category === item.payload.category);
+                                        console.log(originalData, 'this is it')
+                                        console.log(item);
+                                        return (
+                                            <>
+                                                <div
+                                                    className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
+                                                    style={
+                                                        {
+                                                            "--color-bg": `var(--color-${name})`,
+                                                        } as React.CSSProperties
+                                                    }
+                                                />
+                                                {chartConfig[name as keyof typeof chartConfig]?.label || name}
+                                                <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                                                    {originalData && originalData[name === 'amountMonth' ? 'amountMonth' : 'amountTargetMonth']}
+                                                </div>
+                                            </>
+                                        );
+                                    }}
+                                />
+                            }
                         />
-                        <PolarAngleAxis dataKey="category" className="w-full h-full  m-0 p-0"/>
-                        <PolarGrid/>
+                        <PolarAngleAxis dataKey="category" />
+                        <PolarGrid  stroke="white" opacity={'0.4'}/>
                         <Radar
-                            dataKey="other"
-                            fill="red"
-                            fillOpacity={0.6}
+                            dataKey="amountMonth"
+                            fill="url(#BoldRadarGradient1)"
+                            fillOpacity={1}
                         />
-                        <Radar dataKey="CurrentMonth" fill="blue" fillOpacity={0.6}/>
+                        <Cell fill="url(#BoldRadarGradient)" />
+                        <Cell fill="url(#BrightOrangeRed)" />
+                        <Radar dataKey="amountTargetMonth" fill="url(#BoldRadarGradient2)" fillOpacity={0.7} />
+                        
                     </RadarChart>
                 </ChartContainer>
             </CardContent>

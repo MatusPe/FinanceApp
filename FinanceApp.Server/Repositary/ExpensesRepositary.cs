@@ -31,7 +31,7 @@ public class ExpensesRepositary:IExpensesRepositary
                 Type = x.Type,
                 Category = x.Category,
                 Name = x.Name,
-                Sender = x.Sender,
+                Receiver = x.Receiver,
                 Price = x.Price,
                 Date = x.Date,
                 
@@ -45,7 +45,14 @@ public class ExpensesRepositary:IExpensesRepositary
 
     public async Task<Expenses> AddExpensesAsync(Expenses expense)
     {
+        
+        var Loan=await _context.Loans.FirstOrDefaultAsync(e => e.LoanName == expense.Name);
+        var Budget = await _context.Budgets.FirstOrDefaultAsync(e => e.Category == expense.Category);
+        
+        expense.LoanId = Loan?.Id;
+        expense.BudgetId = Budget?.Id;
         await _context.Expenses.AddAsync(expense);
+        
         await _context.SaveChangesAsync(); // Save Expenses first
         await _context.SaveChangesAsync();
         return expense;
@@ -81,12 +88,18 @@ public class ExpensesRepositary:IExpensesRepositary
             return null;
         }
         
+        var Loan=await _context.Loans.FirstOrDefaultAsync(e => e.LoanName == expense.Name);
+        var Budget = await _context.Budgets.FirstOrDefaultAsync(e => e.Category == expense.Category);
+        
+        
         existingExpense.Type = expense.Type;
         existingExpense.Category = expense.Category;
         existingExpense.Name = expense.Name;
-        existingExpense.Sender = expense.Sender;
+        existingExpense.Receiver = expense.Receiver;
         existingExpense.Price = expense.Price;
         existingExpense.Date = expense.Date;
+        existingExpense.LoanId = Loan?.Id;
+        existingExpense.BudgetId = Budget?.Id;
 
         if (expense.ExpenseTransactions == existingExpense.ExpenseTransactions&&existingExpense.CashTransactions == expense.CashTransactions)
         {
@@ -105,21 +118,18 @@ public class ExpensesRepositary:IExpensesRepositary
 
     public async Task<List<ExpensesDTOforPiegraph>> GetExpensesByLastmonth(int month, int year)
     {
-        Console.WriteLine($"This is write expense for month {month}, year {year}");
-        var today = DateTime.Today;
-        var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
-        
-        var firstDayOfMonthUtc = firstDayOfMonth.ToUniversalTime();
-        var todayUtc = today.ToUniversalTime();
-        
-        Console.WriteLine("First Day of Month: " + firstDayOfMonth.ToString("yyyy-MM-dd"));
-        Console.WriteLine("Today: " + today.ToString("yyyy-MM-dd"));
-        Console.WriteLine("this is okeekoe");
+        var firstDayOfMonthUtc = DateTime.SpecifyKind(new DateTime(year, month, 1, 0, 0, 0), DateTimeKind.Utc);
+
+        // Last day of the given month in UTC (set to 23:59:59)
+        var lastDayOfMonthUtc = DateTime.SpecifyKind(new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59), DateTimeKind.Utc);
+
+        Console.WriteLine($"First Day of Month (UTC): {firstDayOfMonthUtc}");
+        Console.WriteLine($"Last Day of Month (UTC): {lastDayOfMonthUtc}");
         
         var filteredExpenses = _context.Expenses
-            .Where(e => e.Date >= firstDayOfMonthUtc && e.Date <= todayUtc) // Filter by the given month
+            .Where(e => e.Date >= firstDayOfMonthUtc && e.Date <= lastDayOfMonthUtc) // Filter by the given month
             .OrderByDescending(x => x.Price);
-
+        
         var top12 = await filteredExpenses.Take(12) // Limit to top 12
             .Select(e => new ExpensesDTOforPiegraph
             {
@@ -139,7 +149,16 @@ public class ExpensesRepositary:IExpensesRepositary
             });
         }
 
-        return top12;
+        var groupedByCategory = top12
+            .GroupBy(e => e.Category)
+            .Select(g => new ExpensesDTOforPiegraph
+            {
+                Category = g.Key,
+                Price = g.Sum(e => e.Price)
+            })
+            .ToList();
+        
+        return groupedByCategory;
         
         
     }
@@ -175,6 +194,57 @@ public class ExpensesRepositary:IExpensesRepositary
         
         return allMonths;
     }
+    
+    public async Task<List<TwoExpensesDTO>> GetTwoExpensesAsync(int TargetMonth, int year)
+    {
+        var firstTargetDayOfMonthUtc = DateTime.SpecifyKind(new DateTime(year, TargetMonth, 1, 0, 0, 0), DateTimeKind.Utc);
+        var lastTargetDayOfMonthUtc = DateTime.SpecifyKind(new DateTime(year, TargetMonth, DateTime.DaysInMonth(year, TargetMonth), 23, 59, 59), DateTimeKind.Utc);
+        
+        int currentMonth = DateTime.Now.Month;
+        
+        var firstDayOfYear = DateTime.SpecifyKind(new DateTime(year, currentMonth, 1, 0, 0, 0), DateTimeKind.Utc);
+        var lastDayOfYear = DateTime.SpecifyKind(new DateTime(year, currentMonth, DateTime.DaysInMonth(year, currentMonth), 23, 59, 59), DateTimeKind.Utc);
+        
+        
+        var targetExpenses = await _context.Expenses
+            .Where(e => e.Date >= firstTargetDayOfMonthUtc && e.Date <= lastTargetDayOfMonthUtc)
+            .GroupBy(e => e.Category)
+            .Select(g => new
+            {
+                Category = g.Key,
+                TargetPrice = g.Sum(e => e.Price)
+            })
+            .ToListAsync();
+        
+        var expenses = await _context.Expenses
+            .Where(e => e.Date >= firstDayOfYear && e.Date <= lastDayOfYear)
+            .GroupBy(e => e.Category)
+            .Select(g => new
+            {
+                Category = g.Key,
+                Price = g.Sum(e => e.Price)
+            })
+            .ToListAsync();
+        
+        
+        var targetExpensesDict = targetExpenses.ToDictionary(x => x.Category, x => x.TargetPrice);
+        var expensesDict = expenses.ToDictionary(x => x.Category, x => x.Price);
+        
+        var commonCategories = targetExpensesDict.Keys.Intersect(expensesDict.Keys)
+            .Take(8)
+            .Select(category => new TwoExpensesDTO
+            {
+                Category = category,
+                AmountTargetMonth = targetExpensesDict[category],
+                AmountMonth = expensesDict[category]
+            })
+            .ToList();
+        
+        
+        
+        return commonCategories;
+    }
+    
 
     public async Task<Expenses> UpdateonlyExpensesAsync(Expenses expense)
     {
@@ -190,13 +260,17 @@ public class ExpensesRepositary:IExpensesRepositary
             
             return null;
         }
+        var Loan=await _context.Loans.FirstOrDefaultAsync(e => e.LoanName == expense.Name);
+        var Budget = await _context.Budgets.FirstOrDefaultAsync(e => e.Category == expense.Category);
         
         existingExpense.Type = expense.Type;
         existingExpense.Category = expense.Category;
         existingExpense.Name = expense.Name;
-        existingExpense.Sender = expense.Sender;
+        existingExpense.Receiver = expense.Receiver;
         existingExpense.Price = expense.Price;
         existingExpense.Date = expense.Date;
+        existingExpense.LoanId = Loan?.Id;
+        existingExpense.BudgetId = Budget?.Id;
         
         
         

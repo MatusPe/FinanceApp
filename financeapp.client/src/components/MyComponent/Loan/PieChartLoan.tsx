@@ -18,6 +18,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
+import {useEffect} from "react";
 const chartData = [
     { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
     { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
@@ -61,12 +62,43 @@ const mobileData = [
 ]
 
 
-function MonthlyPayment({innerRing, title, footer, DoublePie, DurationPie}) {
+function MonthlyPayment({innerRing, title, footer, DoublePie, DurationPie, getData, setData}) {
 
 
+    
+    
     const totalVisitors = React.useMemo(() => {
         return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
     }, [])
+    const [KeyName, setKeyName] = React.useState<string>()
+    const [value, setValue] = React.useState<string>()
+
+
+    
+    useEffect(() => {
+        console.log(getData)
+        if (getData) {  // ✅ Ensure getData exists to prevent runtime errors
+            if (DoublePie) {
+                setKeyName(getData.loadName);
+                setValue("monthlyPayment");
+            } else if (DurationPie) {
+                setKeyName(getData.loadName);
+                setValue("term");
+            } else {
+                setKeyName(getData.loadName);
+                setValue("totalSpent");
+            }
+        }
+
+    },[getData])
+
+    const chartColors = [
+        "red",   // 1st slice color
+        "white", // 2nd slice color
+        "black", // 3rd slice color
+        "blue",  // 4th slice color
+        "pink",  // 5th slice color
+    ];
 
     return (
         <Card className="flex flex-col h-full border-none">
@@ -85,15 +117,16 @@ function MonthlyPayment({innerRing, title, footer, DoublePie, DurationPie}) {
                             content={<ChartTooltipContent hideLabel />}
                         />
                         {DoublePie&&<Pie
-                            data={mobileData}
-                            dataKey="mobile"
+                            data={getData}
+                            dataKey="ir"
+                            nameKey="loanName"
                             innerRadius={0}
                             outerRadius={`60%`}
                         />}
                         <Pie
-                            data={chartData}
-                            dataKey="visitors"
-                            nameKey="browser"
+                            data={getData}
+                            dataKey={value}
+                            nameKey="loanName"
                             innerRadius={`${innerRing}%`}
                             outerRadius={"95%"}
                             strokeWidth={1}

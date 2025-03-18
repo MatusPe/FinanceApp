@@ -1,24 +1,27 @@
 import {AgGridReact} from 'ag-grid-react'; // React Data Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import {useEffect, useMemo, useState} from "react"; // Optional Theme applied to the Data Grid
+import React, {useEffect, useMemo, useState} from "react"; // Optional Theme applied to the Data Grid
 import '../CSS/DateTable.css';
 
 import FormTransaction from "@/components/MyComponent/Budget/FormAddBudget.jsx";
 import ExpensesPage from "@/ExpensesPage.jsx";
 import {colorSchemeDark, themeQuartz} from 'ag-grid-community';
 import CircularProgressWithLabel from "@/components/MyComponent/Budget/CircularProgresswithLabe.jsx";
-import {duration} from "@mui/material";
+import {Checkbox, duration} from "@mui/material";
 
 
 import Screenpiegraph from "@/components/MyComponent/Budget/graphscreen.jsx";
 import {Transaction} from "@/components/MyComponent/Budget/FormAddBudget.jsx";
+import {DeleteExpensesApi, UpdateonlyExpensesApi} from "@/components/MyComponent/Services/ApiService.jsx";
+import {toast} from "react-toastify";
+import {DeleteBudgetApi, UpdateBudgetApi} from "@/components/MyComponent/Services/ApiServiceBudget.jsx";
 
 
 
 
 
-const BudgetData = ({ handleeventPiecomponent }) => {
+const BudgetData = ({ handleeventPiecomponent, getData, setData }) => {
 
 
 
@@ -35,6 +38,9 @@ const BudgetData = ({ handleeventPiecomponent }) => {
 
 
     };
+    useEffect(() => {
+        setRowData(getData)
+    }, [getData]);
 
 
 
@@ -71,11 +77,11 @@ const BudgetData = ({ handleeventPiecomponent }) => {
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState([
 
-        {   width:120,  cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' },
+        {  field:"category", editable:true, width:120,  cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' },
             cellRenderer:(params) => {
                 return (
 
-                    <div className={'m-0 p-0 bg-[#121212] object-contain w-[75%] h-[70%] items-center flex justify-center rounded-full overflow-hidden'}><img className={'w-[70%] h-[70%] object-contain'}  src={`src/assets/Budget/${params.data.Category}.svg`} onError={(e) => e.target.src = 'src/assets/Budget/car.svg'}/></div>
+                    <div className={'m-0 p-0 bg-[#121212] object-contain w-[75%] h-[70%] items-center flex justify-center rounded-full overflow-hidden'}><img className={'w-[70%] h-[70%] object-contain'}  src={`src/assets/Budget/${params.data.category}.svg`} onError={(e) => e.target.src = 'src/assets/Budget/car.svg'}/></div>
 
 
                 )
@@ -84,12 +90,20 @@ const BudgetData = ({ handleeventPiecomponent }) => {
 
         },
 
-        { field: "Name", width:120,  filter: "agTextColumnFilter", editable: true,
+        { field: "name", width:120,  filter: "agTextColumnFilter", editable: true, valueGetter: (params) => `${params.data.name}/${params.data.description}`,valueSetter: (params) => {
+                // Split input into name & description when user edits
+                const [newName, newDescription] = params.newValue.split('/');
+                params.data.name = newName.trim();
+                params.data.description = newDescription ? newDescription.trim() : params.data.description;
+                return true; // Return true to indicate a successful update
+            },
             cellRenderer:(params) => {
+            console.log(params.data);
+            console.log('text');
                 return (
                     <div style={{ display: "flex", flexDirection: "column", marginTop:20   }}>
-                        <span style={{ fontWeight: "bold" ,   lineHeight: 'normal'}}>{params.data.Name}</span>
-                        <span style={{ color: "gray",  lineHeight: 'normal' }}>{params.data.Description}</span>
+                        <span style={{ fontWeight: "bold" ,   lineHeight: 'normal'}}>{params.data.name}</span>
+                        <span style={{ color: "gray",  lineHeight: 'normal' }}>{params.data.description}</span>
                     </div>
 
                 )
@@ -97,11 +111,31 @@ const BudgetData = ({ handleeventPiecomponent }) => {
 
 
         },
-        { field: "Progress" , width:120,filter: "agTextColumnFilter", editable: true, cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' },
+        {  headerName:"Progress", field:"limitAmount",
+
+            filterParams: {
+                values: (params) => {
+                    // Use a custom function to calculate the filtered values
+                    return [
+                        `${params.data.totalExpenses / params.data.limitAmount}`
+                    ];
+                }
+            },
+            width:120,filter: "agTextColumnFilter", editable: true, cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' },
             cellRenderer:(params) => {
+            
+            var color=params.data.totalExpenses / params.data.limitAmount*100;
+            if(color>80){
+                color='error';
+            }else if(color>60){
+                color='warning';
+            }else{
+                color='success';
+            }
+            
                 return (
 
-                    <div className={'flex flex-col  relative    w-[100%] items-center'}><div className={''} ><CircularProgressWithLabel size={60} color={'success'} value={100} /></div> <div className={'absolute top-12 text-[12px]  items-center'}>{params.data.Price}/<span className={'text-green-500 flex-row'}>{params.data.Actual}</span></div></div>
+                    <div className={'flex flex-col  relative    w-[100%] items-center'}><div className={''} ><CircularProgressWithLabel size={60} color={color} value={(params.data.totalExpenses/params.data.limitAmount)*100} /></div> <div className={'absolute top-12 text-[12px]  items-center'}>{params.data.totalExpenses}/<span className={'text-green-500 flex-row'}>{params.data.limitAmount}</span></div></div>
 
 
                 )
@@ -113,10 +147,39 @@ const BudgetData = ({ handleeventPiecomponent }) => {
         },
         {   flex: 1,  cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', flexGrow: 1 } },
 
-        { field: "Budget expiration", width:120,
-            cellRenderer:(params) => {
+        { field:"startDate", valueGetter:(params)=>{
+            console.log(params.data);
+            console.log('daty');
+            const date=new Date(params.data.startDate);
 
-            var tempvariable=new Date(params.data["Budget expiration"])- new Date();
+                return date.toLocaleDateString('en-GB');
+            }
+            
+            ,  valueSetter: (params) => {
+                const newDateString = params.newValue;
+
+                
+                const [day, month, year] = newDateString.split('/'); 
+
+                
+                const newDate = new Date(`${year}-${month}-${day}T00:00:00`);
+
+                
+                params.data.startDate = newDate;
+                return true; 
+            } ,editable:true, headerName: "Budget expiration", width:120,
+            cellRenderer:(params) => {
+            console.log(params.data,'teeeee')
+            var tempvariable=(params.data.intervalRemaining)*24*60*60*1000;
+
+                const addMillisecondsToNow = (milliseconds) => {
+                    const now = new Date(); // Get the current date and time
+                    const newDate = new Date(now.getTime() + milliseconds); // Add the milliseconds
+                    return newDate;
+                };
+
+                var currentDate = new Date();  // Get today's date
+                currentDate.setDate(currentDate.getDate() + params.data.intervalRemaining);
 
                 var day=Math.abs(Math.floor(tempvariable / (1000 * 3600 * 24)));
                 var remainingDays = Math.abs(Math.floor(tempvariable / (1000 * 3600 * 24)));
@@ -127,38 +190,83 @@ const BudgetData = ({ handleeventPiecomponent }) => {
                 }else{
                     remainingDays = `${remainingDays}d.`;
                 }
+                var color=params.data.intervalRemaining;
+                if (color < 5) {
+                    color = '#f44336';  // Red (error)
+                } else if (color < 10) {
+                    color = '#ff9800';  // Orange (warning)
+                } else {
+                    color = '#22c55e';  // Green (success)
+                }
 
             return (<div className={'relative flex flex-col items-center'}><div className={'mt-2 w-2/3 aspect-square rounded-full flex justify-center items-center  font-bold text-center text-[15px]'}
                                                                                 style={{
                                                                                         background: `conic-gradient(
-                                                                                            #16a34a ${(day / params.data.Duration) * 100 * 3.6}deg, 
-                                                                                            black ${(day / params.data.Duration) * 100* 3.6}deg
+                                                                                            ${color} ${(day / params.data.interval) * 100 * 3.6}deg, 
+                                                                                            black ${(day / params.data.interval) * 100* 3.6}deg
                                                                                             )`,
 
                                                                                         WebkitMask:
                                                                                             "radial-gradient(circle, transparent 50%, black 51%)",
                                                                                             mask: "radial-gradient(circle, transparent 50%, black 51%)",
 
-            }}></div><span className={'mt-4 w-2/3 aspect-square absolute font-bold text-white '}>{remainingDays}</span><div className={'  '}>{params.data["Budget expiration"]}</div></div>)
+            }}></div><span className={'mt-4 w-2/3 aspect-square absolute font-bold text-white '}>{remainingDays}</span><div className={'  '}>{addMillisecondsToNow(tempvariable).toDateString()}</div></div>)
             }
         },
-        { field: "Duration", width:120,
+        { field: "interval",editable:true , headerName:"Duration", width:120, headerClass: 'center-header',
             cellRenderer:(params) => {
 
 
 
-            return (<div className={'flex justify-center items-center w-full h-full '}><div className={'flex justify-center items-center w-5/6  mt-2 mb-2 aspect-square border-8 border-green-500 rounded-full text-[20px] font-bold'}>{params.data.Duration}</div></div>)
+            return (<div className={'flex justify-center items-center w-full h-full '}><div className={'flex justify-center items-center w-5/6  mt-2 mb-2 aspect-square border-8 border-green-500 rounded-full text-[20px] font-bold'}>{params.data.interval}d</div></div>)
         }
         },
+        
         {
             width:150,
             cellRenderer:(params) => {
+                var duration = params.data.interval-params.data.intervalRemaining;
+
+                const handleUpdateClick = () => {
+                    console.log("Row Data:", params.data); // This logs the full row data
+                    UpdateBudgetApi(params.data).then(data=>{
+                        if(data.data===""){
+                            console.log(data,'haha');
+                            toast.warn(
+                                "You can not have two loan with same Name"
+                            )
+                            event.node.setDataValue(event.colDef.field, event.oldValue);
+                            
+                        }else{
+
+
+                            toast.success("You update Loan successfully, for update graph reload");
+                        }
+
+                    });
+                };
+
+                const handleDeleteClick = () => {
+                    console.log("Row Data:", params.data); // This logs the full row data
+                    DeleteBudgetApi(params.data.id).then(data=>{
+
+                        console.log(data)
+                    });
+                    setData(prevData => prevData.filter(row => row.id !== params.data.id));
+                    
+                };
+                
+                
                 return (<div className={'flex flex-row w-full h-full  justify-self-start '}><div className={' flex flex-row w-[50px] items-center '}>
 
 
-                    <img className={'ml-0 pl-0 w-[32px] h-[32px] mr-2 opacity-80 hover:opacity-100 hover:scale-150 transition-transform duration-300'} src={'src/assets/edit.svg'}/>
-                    <img className={'w-[32px] h-[32px] mr-2 opacity-80 hover:opacity-100 hover:scale-150 transition-transform duration-300'} src={'src/assets/delete.svg'}/>
-                    <img onClick={(event) => handleeventPiecomponent(event, params.data.Name)} className={'w-[32px] h-[32px] mr-2 opacity-80 hover:opacity-100 hover:scale-150 transition-transform duration-300'} src={'src/assets/Budget/chart-pie.svg'}/></div></div>)
+                    <img onClick={handleUpdateClick} className={'ml-0 pl-0 w-[32px] h-[32px] mr-2 opacity-80 hover:opacity-100 hover:scale-150 transition-transform duration-300'} src={'src/assets/edit.svg'}/>
+                    <img onClick={handleDeleteClick} className={'w-[32px] h-[32px] mr-2 opacity-80 hover:opacity-100 hover:scale-150 transition-transform duration-300'} src={'src/assets/delete.svg'}/>
+                    <img onClick={(event) => handleeventPiecomponent(event, params.data.category, duration)} className={'w-[32px] h-[32px] mr-2 opacity-80 hover:opacity-100 hover:scale-150 transition-transform duration-300'} src={'src/assets/Budget/chart-pie.svg'}/>
+                    
+                </div>
+                    
+                </div>)
             }
         }
 
@@ -181,9 +289,89 @@ const BudgetData = ({ handleeventPiecomponent }) => {
         borderBottom: '2px solid green', backgroundColor:'black'
     };
 
+    const [edit, setEdit] = React.useState(false);
+    const [lastKey, setLastKey] = React.useState(false);
+
+    const handleRowClick = (event) => {
+        // event.data contains all the information of the clicked row
+        console.log("Clicked Row Data:", event.data);
+
+        // You can access specific columns like this:
+        const { name, price, category, sender, date } = event.data;
+        console.log(`Name: ${name}, Price: ${price}, Category: ${category}, Sender: ${sender}, Date: ${date}`);
+    };
+
+    const handleEnterKey = (event) => {
+        const editedData = event.data;
+        UpdateBudgetApi(editedData).then(data=>{
+            if(data.data===""){
+                console.log(data,'haha');
+                toast.warn(
+                    "You can not have two loan with same Name"
+                )
+                event.node.setDataValue(event.colDef.field, event.oldValue);
+            }else{
 
 
+                toast.success("You update Loan successfully, for update graph reload");
+            }
 
+        })
+        // Add your custom logic here
+    };
+    const onCellEditCommit = (event) => {
+
+        console.log("no Data:", event.data);
+        if (event.oldValue !== event.newValue) {
+
+            handleEnterKey(event);
+        }
+    };
+    const onCellEditingStopped = (event) => {
+
+
+        if (event.oldValue !== event.newValue) {
+            console.log("newthinks", event.newValue);
+
+
+            if (lastKey === 'Enter') {
+
+                handleEnterKey(event);
+            }
+        }
+        setEdit(false)
+    };
+
+    const handleKeyDown = (event) => {
+        setLastKey(event.key);  // Store the last key pressed
+    };
+
+    useEffect(() => {
+
+        if(edit)
+            window.addEventListener('keydown', handleKeyDown);
+
+        // Cleanup the event listener when the component unmounts
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [edit]);
+
+    const onCellEditingStarted = () => {
+        setEdit(true);
+    };
+
+    let clickTimeout = null;
+
+    const handleCellClick = (event) => {
+        clickTimeout = setTimeout(() => {
+
+            clickTimeout = null; // Reset timeout reference
+        }, 250);
+        console.log('firstclicked');
+
+        console.log(event);
+    };
 
 
 
@@ -209,6 +397,13 @@ const BudgetData = ({ handleeventPiecomponent }) => {
                 domLayout="autoHeight"
 
                 suppressHorizontalScroll={true}
+
+                onRowClicked={handleRowClick}
+                onCellEditingStopped={onCellEditingStopped}
+                onCellEditCommit={onCellEditCommit}
+                
+                onCellEditingStarted={onCellEditingStarted}
+                onCellClicked={handleCellClick}
 
 
 

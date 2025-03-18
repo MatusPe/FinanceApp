@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 
 import '@/app/globals.css'
 
-import {Label, LabelList, Legend, Pie, PieChart} from "recharts";
+import {Cell, Label, LabelList, Legend, Pie, PieChart} from "recharts";
 
 import {
     Card,
@@ -132,6 +132,58 @@ export function PieChartComponent() {
                             content={<ChartTooltipContent hideLabel/>}
                         />
 
+                        
+
+                        <defs>
+                            <linearGradient id="PurpleDream" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#6a11cb" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#2575fc" stopOpacity={1} />
+                            </linearGradient>
+
+                            <linearGradient id="VioletPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#7f00ff" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#9b30ff" stopOpacity={1} />
+                            </linearGradient>
+                            
+
+                            <linearGradient id="MintBreeze" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#00bfae" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#00e676" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="ElectricLime" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#00e676" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#64dd17" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="LimeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#76ff03" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#00e676" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="PurpleDreamGreenGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                                
+                                <stop offset="0%" stopColor="#00e676" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#6a11cb" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="DeepPurpleViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#5D3F6E" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#8A2BE2" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="OceanBlueToGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#00d27e" stopOpacity={1} />  {/* Fresh Green */}
+                                <stop offset="50%" stopColor="#00b0ff" stopOpacity={1} />  {/* Bright Blue */}
+                                <stop offset="100%" stopColor="#005ac1" stopOpacity={1}/>
+                            </linearGradient>
+                            <linearGradient id="GreenToLightBlueBridge" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#4caf50" stopOpacity={1} />  {/* Vibrant Green */}
+                                <stop offset="50%" stopColor="#80e0e0" stopOpacity={1} />  {/* Light Blue */}
+                                <stop offset="100%" stopColor="#00bcd4" stopOpacity={1} /> {/* Soft Cyan */}
+                            </linearGradient>
+                            <linearGradient id="BlueDream" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#3f51b5" stopOpacity={1} />  {/* Deep Blue */}
+                                <stop offset="100%" stopColor="#00bcd4" stopOpacity={1} /> {/* Light Cyan Blue */}
+                            </linearGradient>
+                            
+                        </defs>
+
                         <Pie
                             data={charData}
                             dataKey="price"
@@ -139,7 +191,18 @@ export function PieChartComponent() {
                             innerRadius={"70%"}
                             outerRadius={"90%"}
                             strokeWidth={2}
+                            fill="url(#gradient1)"
                         >
+                            <Cell fill="url(#PurpleDream)" />
+                            <Cell fill="url(#VioletPurple)" />
+                            <Cell fill="url(#DeepPurpleViolet)" />
+                            <Cell fill="url(#PurpleDreamGreenGlow)" />
+                            <Cell fill="url(#MintBreeze)" />
+                            <Cell fill="url(#ElectricLime)" />
+                            <Cell fill="url(#LimeGlow)" />
+                            <Cell fill="url(#GreenToLightBlueBridge)" />
+                            <Cell fill="url(#OceanBlueToGreen)" />
+                            <Cell fill="url(#BlueDream)" />
                             
 
                             <Label

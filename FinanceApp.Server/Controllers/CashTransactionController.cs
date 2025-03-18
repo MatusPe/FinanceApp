@@ -40,10 +40,10 @@ public class CashTransactionController:ControllerBase
             Console.WriteLine($"Name: {cashTransaction.Name}");
             Console.WriteLine($"Price: {cashTransaction.Price}");
             
-            Console.WriteLine($"Taxis: {cashTransaction.Taxis}");
-            Console.WriteLine($"WithoutTaxis: {cashTransaction.WithoutTaxis}");
+            Console.WriteLine($"Taxis: {cashTransaction.Taxes}");
+            Console.WriteLine($"WithoutTaxis: {cashTransaction.WithoutTaxes}");
             Console.WriteLine($"Sender: {cashTransaction.Sender}");
-            Console.WriteLine($"Receiver: {cashTransaction.Receiver}");
+            
             Console.WriteLine($"Place: {cashTransaction.Place}");
             Console.WriteLine($"Country: {cashTransaction.Country}");
             

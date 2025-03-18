@@ -1,1 +1,2 @@
 C:\Users\matus\Programs\FinanceApp\financeapp.client\obj\Debug\financeapp.client.esproj.CoreCompileInputs.cache
+C:\Users\matus\RiderProjects\FinanceApp\financeapp.client\obj\Debug\financeapp.client.esproj.CoreCompileInputs.cache

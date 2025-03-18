@@ -65,10 +65,9 @@ public class CashRepositary: ICashRepositary
         
         existingCashTransaction.Name = cashTransaction.Name;
         existingCashTransaction.Price = cashTransaction.Price;
-        existingCashTransaction.Taxis = cashTransaction.Taxis;
-        existingCashTransaction.WithoutTaxis = cashTransaction.WithoutTaxis;
+        existingCashTransaction.Taxes = cashTransaction.Taxes;
+        existingCashTransaction.WithoutTaxes = cashTransaction.WithoutTaxes;
         existingCashTransaction.Sender = cashTransaction.Sender;
-        existingCashTransaction.Receiver = cashTransaction.Receiver;
         existingCashTransaction.Place = cashTransaction.Place;
         existingCashTransaction.Country = cashTransaction.Country;
         

@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "Hash": "ubqLE/nWRS9oUcbLA7EtmIwOSr81ga3pMX//3jNFt54=",
+  "Hash": "ti621u5y8KmbW2rvpa5gb1y+SPBjKMR7qGdj1F5tP2w=",
   "Source": "FinanceApp.Server",
   "BasePath": "_content/FinanceApp.Server",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [
     {
-      "Identity": "C:\\Users\\matus\\Programs\\FinanceApp\\financeapp.client\\financeapp.client.esproj",
+      "Identity": "C:\\Users\\matus\\RiderProjects\\FinanceApp\\financeapp.client\\financeapp.client.esproj",
       "Version": 2,
       "Source": "financeapp.client",
       "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",

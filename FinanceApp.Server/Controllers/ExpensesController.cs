@@ -55,7 +55,7 @@ public class ExpensesController: ControllerBase
             Type = expenses.Type,
             Category = expenses.Category,
             Name = expenses.Name,
-            Sender = expenses.Sender,
+            Receiver = expenses.Receiver,
             Price = expenses.Price,
             Date = expenses.Date,
             CashTransactions = expenses.CashTransactions ?? new List<CashTransaction>(),
@@ -71,7 +71,7 @@ public class ExpensesController: ControllerBase
     
     public async Task<IActionResult> GetExpensesBymounth([FromRoute] int month, [FromRoute] int year)
     {
-        
+        Console.WriteLine("Hello, this is a log message!");
         var mounthExpenses=await expensesRepositary.GetExpensesByLastmonth(month, year);
         
         
@@ -114,6 +114,7 @@ public class ExpensesController: ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddExpense([FromBody] ExpensesDTO expensesDto)
     {
+        Console.WriteLine("javol!");
 
 
         var expense = ExpensesMapper.MapToEntity(expensesDto);
@@ -130,7 +131,7 @@ public class ExpensesController: ControllerBase
     public async Task<IActionResult> UpdateExpense( [FromBody] ExpensesDTO expensesDto)
     {
         
-        Console.WriteLine($"Updating Expense: {expensesDto.Sender}");
+        Console.WriteLine($"Updating Expense: {expensesDto.Receiver}");
         var expense = ExpensesMapper.MapToEntity(expensesDto);
         
         await expensesRepositary.UpdateExpensesAsync(expense);
@@ -149,6 +150,21 @@ public class ExpensesController: ControllerBase
         }
        
         return Ok("Expense deleted successfully");
-    }  
+    }
+
+    [HttpGet("GetTwoExpensesdifference/{targetMonth}/{year}")]
+    public async Task<IActionResult> GetTwoExpenses([FromRoute] int targetMonth,[FromRoute] int year)
+    {
+        Console.WriteLine(targetMonth);
+        Console.WriteLine(year);
+        Console.WriteLine("Hellooo okeyy");
+        var expenses = await expensesRepositary.GetTwoExpensesAsync(targetMonth, year);
+        if (expenses == null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(expenses);
+    }
         
 }

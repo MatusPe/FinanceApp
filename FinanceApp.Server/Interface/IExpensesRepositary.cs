@@ -15,4 +15,5 @@ public interface IExpensesRepositary
     Task<Expenses> UpdateonlyExpensesAsync(Expenses expense);
     Task<List<ExpensesDTOforPiegraph>> GetExpensesByLastmonth(int month, int year);
     Task<List<ExpensesDTOforPiegraph>> GetGroupedExpensesByMonth(int year);
+    Task<List<TwoExpensesDTO>> GetTwoExpensesAsync(int TargetMonth, int year);
 }

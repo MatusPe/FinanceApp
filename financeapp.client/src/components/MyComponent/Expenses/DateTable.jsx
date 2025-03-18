@@ -123,7 +123,7 @@ const ExpensesData = () => {
         },cellStyle: { padding: 0, margin: 0 }
         },
         { field: "name" , rowGroup:true, width:120,filter: "agTextColumnFilter", editable: true, cellStyle: {  fontSize:'16px', fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2'} , },
-        { field: "sender", width:100, filter: "agTextColumnFilter", editable: true, cellStyle: {  fontSize:'12px',fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2', color: "gray",} },
+        { field: "Receiver", width:100, filter: "agTextColumnFilter", editable: true, cellStyle: {  fontSize:'12px',fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2', color: "gray",} },
         { field: "price", width:100,editable: true,filter: "agNumberColumnFilter",  cellStyle: {  fontSize:'16px', fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2', display: 'flex', justifyContent: 'center',alignItems: 'center'},
             cellRenderer: (params) => {
 
@@ -134,7 +134,7 @@ const ExpensesData = () => {
                 }else {
                     bordercolorclass = 'red-500';
                 }
-                return(<div className={`text-${bordercolorclass}`}>{params.data.price}</div>)
+                return(<div className={`text-${bordercolorclass}`}>{params.data.price}$</div>)
             }
         },
         { field: "date", width:100,  editable: true,filter: 'agTextColumnFilter',cellStyle: {  fontSize:'14px', fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2', display: 'flex', justifyContent: 'center',alignItems: 'center'},valueGetter: (params) => {
@@ -146,8 +146,18 @@ const ExpensesData = () => {
                 const handleUpdateClick = () => {
                     console.log("Row Data:", params.data); // This logs the full row data
                     UpdateonlyExpensesApi(params.data).then(data=>{
-                        
-                        console.log(data)
+                        if(data.data===""){
+                            console.log(data,'haha');
+                            toast.warn(
+                                "You can not have two loan with same Name"
+                            )
+                            event.node.setDataValue(event.colDef.field, event.oldValue);
+                        }else{
+
+
+                            toast.success("You update Loan successfully");
+                        }
+
                     });
                 };
 
@@ -170,7 +180,7 @@ const ExpensesData = () => {
                 
                 
                 
-            return(<div className={'h-full flex flex-row justify-center items-center'}>
+            return(<div className={' w-full h-full flex flex-row justify-center items-center'}>
                 <button onClick={handleUpdateClick} onDoubleClick={handleDoubleClick} className={'transition-transform duration-300 hover:scale-150 hover:opacity-100 opacity-80'}><img className={'w-[25px] h-[25px] '} src={'src/assets/edit.svg'}/></button>
                 <button onClick={handleDeleteClick} className={'transition-transform duration-300 hover:scale-150 opacity-80 hover:z-20 hover:opacity-100'}><img className={'w-[25px] h-[25px] hover:shadow-black-500 '} src={'src/assets/Delete.svg'}/></button>
             
@@ -207,7 +217,20 @@ const ExpensesData = () => {
     
     const handleEnterKey = (event) => {
         const editedData = event.data;
-        UpdateonlyExpensesApi(editedData).then(data=>{})
+        UpdateonlyExpensesApi(editedData).then(data=>{
+            if(data.data===""){
+                console.log(data,'haha');
+                toast.warn(
+                    "You can not have two loan with same Name"
+                )
+                event.node.setDataValue(event.colDef.field, event.oldValue);
+            }else{
+
+
+                toast.success("You update Loan successfully");
+            }
+
+        })
         // Add your custom logic here
     };
     const onCellEditCommit = (event) => {
@@ -330,7 +353,7 @@ const ExpensesData = () => {
 
 
 
-            {showComponent && <div className={''}> <Transaction  /></div>}
+            {showComponent && <div className={''}> <Transaction setshowcomponent={setShowComponent} /></div>}
             {showDetail&& <div className={''}> <Detail data={ExpensesDetail} setshowcomponent={setShowDetail}></Detail></div>}
             
 

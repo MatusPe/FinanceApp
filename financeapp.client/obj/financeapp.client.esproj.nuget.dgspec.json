@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\matus\\Programs\\FinanceApp\\financeapp.client\\financeapp.client.esproj": {}
+    "C:\\Users\\matus\\RiderProjects\\FinanceApp\\financeapp.client\\financeapp.client.esproj": {}
   },
   "projects": {
-    "C:\\Users\\matus\\Programs\\FinanceApp\\financeapp.client\\financeapp.client.esproj": {
+    "C:\\Users\\matus\\RiderProjects\\FinanceApp\\financeapp.client\\financeapp.client.esproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\matus\\Programs\\FinanceApp\\financeapp.client\\financeapp.client.esproj",
+        "projectUniqueName": "C:\\Users\\matus\\RiderProjects\\FinanceApp\\financeapp.client\\financeapp.client.esproj",
         "projectName": "financeapp.client",
-        "projectPath": "C:\\Users\\matus\\Programs\\FinanceApp\\financeapp.client\\financeapp.client.esproj",
+        "projectPath": "C:\\Users\\matus\\RiderProjects\\FinanceApp\\financeapp.client\\financeapp.client.esproj",
         "packagesPath": "C:\\Users\\matus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\matus\\Programs\\FinanceApp\\financeapp.client\\obj\\",
+        "outputPath": "C:\\Users\\matus\\RiderProjects\\FinanceApp\\financeapp.client\\obj\\",
         "projectStyle": "PackageReference",
         "UsingMicrosoftNETSdk": false,
         "fallbackFolders": [

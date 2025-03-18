@@ -13,7 +13,7 @@ public class ExpensesMapper
             Type = expenses.Type,
             Category = expenses.Category,
             Name = expenses.Name,
-            Sender = expenses.Sender,
+            Receiver = expenses.Receiver,
             Price = expenses.Price,
             Date = expenses.Date,
             
@@ -31,7 +31,7 @@ public class ExpensesMapper
             Type = expensesDto.Type,
             Category = expensesDto.Category,
             Name = expensesDto.Name,
-            Sender = expensesDto.Sender,
+            Receiver = expensesDto.Receiver,
             Price = expensesDto.Price,
             Date = expensesDto.Date,
             Userid = "7b1c6911-3ddc-45f8-b73a-47fac17619af",

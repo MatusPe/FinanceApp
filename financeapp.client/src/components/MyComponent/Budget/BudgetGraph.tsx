@@ -23,6 +23,8 @@ import { SelectItem } from "@radix-ui/react-select";
 import {Select, SelectContent, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {meta} from "eslint-plugin-react/lib/rules/jsx-props-no-spread-multi";
 import category = meta.docs.category;
+import {useEffect} from "react";
+import { GetExpensesByBudgetApi} from "../Services/ApiServiceBudget.jsx";
 
 const chartData = [
     { category: "Tesla", price: 64950, fill: 'var(--teal400)', date: "2024-03-15" },
@@ -86,16 +88,51 @@ const month={
     Dec: "12",
 }
 
-export function BudgetPieChartComponent(name) {
+export function BudgetPieChartComponent({name, duration, getdata}) {
 
 
-    console.log(name)
-    const [activeMonth, setActiveMonth] = React.useState((new Date().getMonth()+1).toString());
-    const [activeYear, setActiveYear] = React.useState(new Date().getFullYear());
-    const transformedDate=getDatabyDate(chartData, parseInt(activeMonth,10)-1, activeYear)
-    const totalPrice = chartData.reduce((acc, curr) => acc + curr.price, 0);
+    
+    const [getData, setData] = React.useState([]);
+    
+    const totalPrice = getData.reduce((acc, curr) => acc + curr.price, 0);
+
+    useEffect(() => {
+        if (name){
+            console.log(duration,'to je duracia');
+            GetExpensesByBudgetApi(name, duration).then((res)=>{
+                console.log(res)
+                setData(res.data)
+                
+            })
+        }else if(getdata){
+            
+            var filterdata=getdata.filter(item => item.interval <= 30);
+
+            filterdata.sort((a, b) => b.limitAmount - a.limitAmount);
+            var mainCategories = filterdata.slice(0, 11);
+            var otherCategories = filterdata.slice(11);
+
+            var otherTotal = otherCategories.reduce((acc, item) => acc + item.limitAmount, 0);
 
 
+            var data = mainCategories.map(item => ({
+                category: item.category,
+                price: item.limitAmount
+            }));
+
+
+            if (otherCategories.length > 0) {
+                data.push({
+                    category: "Other",
+                    price: otherTotal
+                });
+            }
+            
+            setData(data)
+            console.log(data,'getteddata')
+        }
+        
+    }, [name, getdata]);
     return (
         <Card className="flex h-full w-full flex-col   border-none">
             <CardHeader className="items-center pb-0 flex-row">
@@ -117,7 +154,7 @@ export function BudgetPieChartComponent(name) {
                         />
 
                         <Pie
-                            data={chartData}
+                            data={getData}
                             dataKey="price"
                             nameKey="category"
                             innerRadius={"70%"}
@@ -167,7 +204,7 @@ export function BudgetPieChartComponent(name) {
                                 style={{fill: 'white'}}
                                 formatter={(value) => {
 
-                                    const total = chartData.reduce((sum, entry) => sum + entry.price, 0);
+                                    const total = getData.reduce((sum, entry) => sum + entry.price, 0);
 
                                     const percentage = ((value / total) * 100).toFixed(2);
                                     return `${percentage}%`;

@@ -6,16 +6,25 @@ import {IconLabel} from "@/assets/IconReact.jsx";
 import {AgGridReact} from "ag-grid-react";
 import * as response from "autoprefixer";
 import { CircleDollarSign, ArrowLeftRight, Blocks,File, FilePlus2, Images, CloudUpload } from 'lucide-react';
-import {Slider} from "@mui/material";
+import {FormHelperText, Slider} from "@mui/material";
 import {LoanIcon} from "@/assets/overall/OverAllSVG.jsx";
-const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, inpuref}) => {
+import {Inter} from "next/dist/compiled/@next/font/dist/google/index.js";
+
+import {PostLoan} from "../Services/ApiServiceLoan.jsx";
+import {toast} from "react-toastify";
+const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData}) => {
     const currentDate = new Date().toLocaleDateString();
 
     const [dob, setDob] = useState(null);
 
     const [path, setpath] = useState('relative bottom-[120px] right-[25px] space-x-0 flex-row justify-start');
-
+    
+    const [Duration, setDuration] = useState(30);
+    
+    const [Interval, setInterval] = useState(30);
     const formRef = useRef();
+    const [DateStart, setDateStart] = useState();
+    const [DateEnd, setDateEnd] = useState();
 
 
     const handleactivelabel = (activelabel) => {
@@ -26,54 +35,74 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
 
     }
 
+    const [loan, setloan] = useState({
+        loanname: "",
+        lender: "",
+        amounth: "",
+        ir: "",
+        term: "",
+        loanStart: "",
+        loanEnd: "",
+        monthlyPayment:"",
+        status:"active",
+        description: "",
+        IntervalPayment:""
+    });
+    
+    useEffect(() => {
+        console.log(loan, 'this is loan at least');
+    }, [loan])
 
-    const handlesavedData = (inputRefs) => {
-
-
-
-
-        const values = Object.keys(inputRefs).map(key => ({
-            name: key,  // the key name (e.g., "Type")
-            value: inputRefs[key].current ? inputRefs[key].current.value : '',
+    const handleChange = async (e) => {
+        const {name, value} = e.target;
+        await setloan((prevLoan) => ({
+            ...prevLoan,
+            [name]: value,
         }));
 
 
-        const resultObject = values.reduce((acc, { name, value }) => {
-            acc[name] = value;
-            return acc;
-        }, {});
-
-
-        const arrays = Object.values(resultObject);
-
-        console.log(arrays);
-        console.log('hihiih');
-
-
-        setSavedData(prevData => [...prevData, arrays]);
-
-
-
-        formRef.current.reset();
-
     }
+    const handleSubmitData=async (e)=>{
+        e.preventDefault()
+        if(Duration<1||Interval<1||!DateStart||!DateEnd){
+            toast.error("Missing or wrong data.")
+            return
+        }
+        await PostLoan(loan).then(r => window.location.reload());
+    }
+    
     const marksLoanDuration = [
         {
             value: 0,
-            label: '0°C',
+            label: '0D',
+        },
+        {
+            value: 5,
+            label: '5Y',
+        },
+        
+        {
+            value: 10,
+            label: '10Y',
         },
         {
             value: 20,
-            label: '20°C',
+            label: '20Y',
         },
         {
-            value: 37,
-            label: '37°C',
+            value: 30,
+            label: '30Y',
         },
         {
-            value: 100,
-            label: '100°C',
+            value: 50,
+            label: '50Y',
         },
+        {
+            value: 60,
+            label: '60Y',
+        },
+        
+        
     ];
 
     const marksIntervalPayment = [
@@ -110,13 +139,42 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
         },
     ];
 
+    
+    useEffect( () => {
+        setloan((prevState) => ({
+            ...prevState,
+            loanStart: DateStart,
+        }));
+        
+    },[DateStart])
+
+    useEffect( () => {
+        setloan((prevState) => ({
+            ...prevState,
+            loanEnd: DateEnd,
+        }));
+        
+    },[DateEnd])
+    useEffect( () => {
+        setloan((prevState) => ({
+            ...prevState,
+            term: Duration,
+        }));
+
+    },[Duration])
+    useEffect( () => {
+        setloan((prevState) => ({
+            ...prevState,
+            IntervalPayment: Interval,
+        }));
+
+    },[Interval])
+    
+
     function valuetext(value) {
         return `${value}°C`;
     }
-    console.log(inpuref)
-    console.log('newewewe')
-    console.log(inpuref)
-    console.log('inpureftcash')
+    
 
     return (
         <div className={` text-center w-[900px] h-[550px] bg-[#3A3535] rounded-[9px]  border-green-500 border shadow-lg shadow-black z-50`}>
@@ -128,7 +186,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
 
             </div>
 
-            <form className=' relative bottom-[230px] flex flex-col justify-center items-center' ref={formRef}>
+            <form className=' relative bottom-[230px] flex flex-col justify-center items-center'  >
 
 
                 <div className={'flex flex-row '}>
@@ -136,9 +194,9 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                     <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] mb-5'>
                         <div className="flex flex-col relative w-[400px]">
                             <label
-                                className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Name</label>
-                            <input type="text" placeholder="Name" maxLength={40}
-                                   className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Name} />
+                                className="absolute top-[-10px] left-5  text-green-500  bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Name</label>
+                            <input type="text" placeholder="Name" maxLength={40} required
+                                   className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A] " value={loan.loanname} name="loanname" onChange={handleChange}  />
                         </div>
 
                     </div>
@@ -146,14 +204,14 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                         <div className="flex flex-col relative w-[250px]">
                             <label
                                 className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Loan</label>
-                            <input type="number" placeholder="Loan"  maxLength={15}
-                                   className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Loan}/>
+                            <input type="number" placeholder="Loan"  maxLength={15} required max={10000000} min={0}
+                                   className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" value={loan.amounth} name="amounth" onChange={handleChange}/>
                         </div>
                         <div className="flex flex-col relative w-[170px]">
                             <label
                                 className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Start Date</label>
 
-                            <CalendarForm  className='bg-black' dob={dob} setDob={setDob} ref={inpuref.StartDate} ></CalendarForm>
+                            <CalendarForm  className='bg-black' dob={DateStart} setDob={setDateStart}  ></CalendarForm>
 
                         </div>
                     </div>
@@ -163,15 +221,15 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                     <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] mb-5 '>
                         <div className="flex flex-col relative w-[250px]">
                             <label
-                                className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">IR</label>
-                            <input type="number" placeholder="IR"  maxLength={15}
-                                   className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.IR}/>
+                                className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b ">IR</label>
+                            <input type="number" placeholder="IR"  maxLength={15} required max={100} min={0}
+                                   className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" value={loan.ir} name="ir" onChange={handleChange}/>
                         </div>
                         <div className="flex flex-col relative w-[170px]">
                             <label
                                 className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">End Date</label>
 
-                            <CalendarForm  className='bg-black' dob={dob} setDob={setDob} ref={inpuref.EndDate} ></CalendarForm>
+                            <CalendarForm  className='bg-black' dob={DateEnd} setDob={setDateEnd}  ></CalendarForm>
 
                         </div>
                     </div>
@@ -180,21 +238,13 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                         <div className="flex flex-col relative w-[400px]">
                             <label
                                 className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Lender</label>
-                            <input type="text" placeholder="Lender" maxLength={27}
-                                   className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Lender}/>
+                            <input type="text" placeholder="Lender" maxLength={27} required
+                                   className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A]" value={loan.lender} name="lender" onChange={handleChange}/>
                         </div>
 
                     </div>
 
-                    <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] mb-5'>
-                        <div className="flex flex-col relative w-[400px]">
-                            <label
-                                className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Borrower</label>
-                            <input type="text" placeholder="Borrower" maxLength={27}
-                                   className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Borrower}/>
-                        </div>
-
-                    </div>
+                    
 
 
 
@@ -203,39 +253,39 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                 </div>
 
                 <div className='w-[400px] mb-5'>
-                    <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] mb-5'>
+                    <div className='flex flex-row justify-end gap-3 w-[400px] h-[30px] rounded-[9px] mb-5'>
                         <div className="flex flex-col relative w-[250px]">
                             <label
                                 className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Mounthly payment</label>
-                            <input type="Type" placeholder="Mounthly payment"  maxLength={15}
-                                   className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.MounthlyPayment}/>
+                            <input type="number" placeholder="Mounthly payment"  maxLength={15} max={100000} min={0}
+                                   className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" value={loan.monthlyPayment} name="monthlyPayment" onChange={handleChange}/>
                         </div>
-                        <div className="flex flex-col relative w-[170px]">
-                            <label
-                                className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">First payment</label>
-
-                            <CalendarForm  className='bg-black' dob={dob} setDob={setDob} ref={inpuref.FirstPayment} ></CalendarForm>
-
-                        </div>
+                       
                     </div>
                     <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] mb-10 mt-10 relative'>
                         <label
-                            className="absolute top-[-20px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Loan Duration</label>
+                            className="absolute top-[-20px] left-5 text-green-500 bg-[#2D2A2A]  rounded-b-[9px]  border-b-green-500 border-b">Loan Duration</label>
                         <Slider
                             size="medium"
                             aria-label="Restricted values"
                             defaultValue={30}
                             getAriaValueText={valuetext}
-                            max={70}
-                            step={0.1}
+                            
+                            value={Duration} onChange={(e, newValue)=>setDuration(newValue)}
+                            max={60}
+                            step={1}
                             valueLabelDisplay="auto"
                             marks={marksLoanDuration}
+                            
                             sx={{  color: 'success.main',
                                 '& .MuiSlider-markLabel': { fontWeight: 'bold', fontSize: '1.0rem', color: 'white' }, // Adjust mark labels
                                 '& .MuiSlider-valueLabel': { fontWeight: 'bold', fontSize: '1.0rem', color: 'white' },  // Increase the track height
                             }}
+                            
+                                
+                            
                         />
-
+                        
                     </div>
 
                     <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] mb-8 mt-8 relative'>
@@ -248,7 +298,12 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                             defaultValue={30}
                             getAriaValueText={valuetext}
                             max={365}
-                            step={1}
+                            step={0.01}
+                            value={Interval} // Binds to the state Interval
+                            onChange={(e, newValue) => {
+                                setInterval(newValue); // Updates the state
+                                console.log(newValue); // Logs the new value to the console
+                            }}
                             valueLabelDisplay="auto"
                             marks={marksIntervalPayment}
                             sx={{  color: 'success.main',
@@ -259,15 +314,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
 
                     </div>
 
-                    <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] '>
-                        <div className="flex flex-col relative w-[400px]">
-                            <label
-                                className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Sender</label>
-                            <input type="text" placeholder="Name of the Sender" maxLength={27}
-                                   className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Sender}/>
-                        </div>
-
-                    </div>
+                   
 
 
 
@@ -280,8 +327,8 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                         <label
                             className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b" >Notes</label>
                         <textarea
-                            placeholder="Comment" maxLength={300}
-                            className="w-full h-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Notes}
+                            placeholder="Comment" maxLength={3000}
+                            className="w-full h-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A]" value={loan.description} name="description" onChange={handleChange}
                         ></textarea>
                     </div>
 
@@ -293,11 +340,11 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
 
                 <div className='flex flex-row gap-3 w-[400px]'>
                     <button type="button"
-                            className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={() => window.location.reload()}>Cancel
+                            className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={() => handleSubmitData()}>Cancel
                     </button>
 
                     <button type="submit"
-                            className='w-[300px] h-[40px] bg-green-500 hover:scale-110 transition-transform duration-300'>Submit
+                            className='w-[300px] h-[40px] bg-green-500 hover:scale-110 transition-transform duration-300' onClick={(e) => handleSubmitData(e)}>Submit
                     </button>
                 </div>
             </form>
@@ -404,21 +451,7 @@ export const Transaction=(handleButtonClick)=>{
     const [savedData, setSavedData] = useState([]);
     const [typeExpenses, setType] = useState(null);
 
-    const inputRefs = {
-        Name: typeExpenses,
-        Loan: useRef(),
-        IR: useRef(),
-        StartDate:useRef(),
-        EndDate: useRef(),
-        Lender: useRef(),
-        Borrower: useRef(),
-        Notes: useRef(),
-        MounthlyPayment: useRef(),
-        FirstPayment: useRef(),
-        Duration: useRef(),
-        Interval: useRef(),
-
-    };
+    
 
 
 
@@ -440,15 +473,15 @@ export const Transaction=(handleButtonClick)=>{
         return postion;
     }
 
-    console.log(inputRefs);
+    
     return (<div className={`${PositionFormular()}  h-[550px]  flex flex-row`}>
 
 
-            {activelabel === 'Detail' && (<div className={`h-full w-[calc(100%-900px)] relative -mr-[6px]  `}><CashDetail data={savedData} inpuref={inputRefs}/></div>)}
-            {activelabel === 'File' && (<div className={`h-full w-[calc(100%-900px)] relative -mr-[6px]  `}><Addfile data={savedData} inpuref={inputRefs}/></div>)}
+            
+            {activelabel === 'File' && (<div className={`h-full w-[calc(100%-900px)] relative -mr-[6px]  `}><Addfile data={savedData} /></div>)}
 
 
-            <div className={''}><FormTransaction activelabel={activelabel} setactivelabel={setactivelabel} savedData={savedData} setSavedData={setSavedData} inpuref={inputRefs} /></div></div>)
+            <div className={''}><FormTransaction activelabel={activelabel} setactivelabel={setactivelabel} savedData={savedData} setSavedData={setSavedData}  /></div></div>)
 
 
 

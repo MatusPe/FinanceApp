@@ -22,7 +22,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import React from "react"
+import React, {useEffect} from "react"
 
 
 
@@ -32,7 +32,10 @@ import React from "react"
     });
 
 
-
+     useEffect(() => {
+         console.log(dob)
+         setDob(dob)
+     }, [dob]);
     return (
         <Form {...form}>
             <form>

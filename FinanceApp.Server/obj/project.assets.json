@@ -5314,11 +5314,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\matus\\Programs\\FinanceApp\\FinanceApp.Server\\FinanceApp.Server.csproj",
+      "projectUniqueName": "C:\\Users\\matus\\RiderProjects\\FinanceApp\\FinanceApp.Server\\FinanceApp.Server.csproj",
       "projectName": "FinanceApp.Server",
-      "projectPath": "C:\\Users\\matus\\Programs\\FinanceApp\\FinanceApp.Server\\FinanceApp.Server.csproj",
+      "projectPath": "C:\\Users\\matus\\RiderProjects\\FinanceApp\\FinanceApp.Server\\FinanceApp.Server.csproj",
       "packagesPath": "C:\\Users\\matus\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\matus\\Programs\\FinanceApp\\FinanceApp.Server\\obj\\",
+      "outputPath": "C:\\Users\\matus\\RiderProjects\\FinanceApp\\FinanceApp.Server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

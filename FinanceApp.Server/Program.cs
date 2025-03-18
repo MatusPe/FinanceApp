@@ -83,6 +83,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IExpensesRepositary, ExpensesRepositary>();
 builder.Services.AddScoped<ICashRepositary, CashRepositary>();
 builder.Services.AddScoped<ITransactionRepositary, TransactionRepositary>();
+builder.Services.AddScoped<ILoanRepositary, LoanRepositary>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

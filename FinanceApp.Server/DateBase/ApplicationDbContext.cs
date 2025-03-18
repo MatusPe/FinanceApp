@@ -1,4 +1,5 @@
-﻿using FinanceApp.Server.Models;
+﻿using FinanceApp.Server.Entity;
+using FinanceApp.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ public class ApplicationDbContext:  IdentityDbContext<AppUser>
     
     public DbSet<CashTransaction> CashTransactions { get; set; }
     public DbSet<ExpenseTransaction> ExpenseTransactions { get; set; }
+    
+    public DbSet<Loan> Loans { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
