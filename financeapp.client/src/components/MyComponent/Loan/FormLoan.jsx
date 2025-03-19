@@ -86,7 +86,7 @@ const FormLoan = () => {
                 <p className='mb-2 text-[12px]'>Attach file. File size of your documents should not exceed 10MB.</p>
                 <div className='flex flex-row gap-3 w-[400px]'>
                     <button type="submit"
-                        className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 onClick="window.location.reload()"'>Cancel
+                        className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick="window.location.reload()">Cancel
                     </button>
                     <button type="submit"
                         className='w-[400px] h-[40px] bg-green-500 hover:scale-110 transition-transform duration-300'>Submit

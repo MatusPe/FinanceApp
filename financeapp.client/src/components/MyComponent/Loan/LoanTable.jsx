@@ -368,7 +368,7 @@ const LoanData = ({getdata, setData, gridRef}) => {
                 <img src="src/assets/list-plus.svg" alt="Transaction" className="w-full h-full object-contain" />
 
             </div>
-            {showComponent && <Transaction  />}
+            {showComponent && <Transaction showform={setShowComponent} />}
 
         </div>
         );

@@ -3,7 +3,7 @@ import { TrendingUp } from "lucide-react";
 
 import '@/app/globals.css'
 
-import {Label, LabelList, Legend, Pie, PieChart} from "recharts";
+import {Cell, Label, LabelList, Legend, Pie, PieChart} from "recharts";
 
 import {
     Card,
@@ -146,12 +146,66 @@ export function BudgetPieChartComponent({name, duration, getdata}) {
                     config={chartConfig}
                     className=" m-0 p-0  w-full  h-full flex-grow"
                 >
+                    
 
                     <PieChart className="flex-col  m-0 p-0   ">
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel/>}
                         />
+                        <defs>
+                            <linearGradient id="PurpleDream" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#6a11cb" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#2575fc" stopOpacity={1} />
+                            </linearGradient>
+
+                            <linearGradient id="VioletPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#7f00ff" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#9b30ff" stopOpacity={1} />
+                            </linearGradient>
+
+
+                            <linearGradient id="MintBreeze" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#00bfae" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#00e676" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="ElectricLime" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#00e676" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#64dd17" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="LimeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#76ff03" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#00e676" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="PurpleDreamGreenGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+
+                                <stop offset="0%" stopColor="#00e676" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#6a11cb" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="DeepPurpleViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#5D3F6E" stopOpacity={1} />
+                                <stop offset="100%" stopColor="#8A2BE2" stopOpacity={1} />
+                            </linearGradient>
+                            <linearGradient id="OceanBlueToGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#00d27e" stopOpacity={1} />  {/* Fresh Green */}
+                                <stop offset="50%" stopColor="#00b0ff" stopOpacity={1} />  {/* Bright Blue */}
+                                <stop offset="100%" stopColor="#005ac1" stopOpacity={1}/>
+                            </linearGradient>
+                            <linearGradient id="GreenToLightBlueBridge" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#4caf50" stopOpacity={1} />  {/* Vibrant Green */}
+                                <stop offset="50%" stopColor="#80e0e0" stopOpacity={1} />  {/* Light Blue */}
+                                <stop offset="100%" stopColor="#00bcd4" stopOpacity={1} /> {/* Soft Cyan */}
+                            </linearGradient>
+                            <linearGradient id="BlueDream" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#3f51b5" stopOpacity={1} />  {/* Deep Blue */}
+                                <stop offset="100%" stopColor="#00bcd4" stopOpacity={1} /> {/* Light Cyan Blue */}
+                            </linearGradient>
+                            <linearGradient id="darkBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00bcd4" stop-opacity="1" />
+                                <stop offset="90%" stop-color="#0000ff" stop-opacity="1" />
+                            </linearGradient>
+
+                        </defs>
 
                         <Pie
                             data={getData}
@@ -160,7 +214,19 @@ export function BudgetPieChartComponent({name, duration, getdata}) {
                             innerRadius={"70%"}
                             outerRadius={"90%"}
                             strokeWidth={2}
+                            
                         >
+                            <Cell fill="url(#PurpleDream)" />
+                            <Cell fill="url(#VioletPurple)" />
+                            <Cell fill="url(#DeepPurpleViolet)" />
+                            <Cell fill="url(#PurpleDreamGreenGlow)" />
+                            <Cell fill="url(#MintBreeze)" />
+                            <Cell fill="url(#ElectricLime)" />
+                            <Cell fill="url(#LimeGlow)" />
+                            <Cell fill="url(#GreenToLightBlueBridge)" />
+                            <Cell fill="url(#OceanBlueToGreen)" />
+                            <Cell fill="url(#BlueDream)" />
+                            <Cell fill="url(#darkBlue)" />
 
                             <Label
                                 content={({viewBox}) => {

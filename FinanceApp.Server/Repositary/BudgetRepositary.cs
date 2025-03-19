@@ -22,7 +22,7 @@ public class BudgetRepositary: IBudgetRepositary
             Id = e.Id,
             Name = e.Name,
             LimitAmount = e.LimitAmount,
-            Status = e.Status,
+            
             StartDate = e.StartDate,
             repeater = e.repeater,
             Interval = e.Interval,
@@ -97,8 +97,25 @@ public class BudgetRepositary: IBudgetRepositary
             Category = e.Category,
             Price = e.Price,
             
-        }).ToListAsync();
-        return expenses;
+        }).OrderByDescending(e=>e.Price).ToListAsync();
+        
+        
+        
+        var main=expenses.Take(15).ToList();
+        if (expenses.Count() > 15)
+        {
+            var otherSum = expenses.Skip(15).Sum(e => e.Price);
+        
+            var other = new ExpensesDTOforPiegraph
+            {
+                Category = "Other",  // You can change the name if needed
+                Price = otherSum
+            };
+            main.Add(other); 
+        }
+        
+        return main;
+        
     }
 
     public async Task<Budget> UpdateBudgetAsync(int id, Budget budget)
@@ -131,7 +148,7 @@ public class BudgetRepositary: IBudgetRepositary
         }
         oldbudget.Name= budget.Name;
         oldbudget.LimitAmount = budget.LimitAmount;
-        oldbudget.Status = budget.Status;
+        
         oldbudget.StartDate = budget.StartDate;
         
         oldbudget.repeater = budget.repeater;

@@ -12,7 +12,7 @@ import {Inter} from "next/dist/compiled/@next/font/dist/google/index.js";
 
 import {PostLoan} from "../Services/ApiServiceLoan.jsx";
 import {toast} from "react-toastify";
-const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData}) => {
+const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, showform}) => {
     const currentDate = new Date().toLocaleDateString();
 
     const [dob, setDob] = useState(null);
@@ -340,7 +340,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData}) 
 
                 <div className='flex flex-row gap-3 w-[400px]'>
                     <button type="button"
-                            className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={() => handleSubmitData()}>Cancel
+                            className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={() => showform(false)}>Cancel
                     </button>
 
                     <button type="submit"
@@ -444,7 +444,7 @@ const Addfile=({inpuref})=> {
 
 
 
-export const Transaction=(handleButtonClick)=>{
+export const Transaction=({handleButtonClick, showform})=>{
 
 
     const [activelabel, setactivelabel] = useState(null);
@@ -481,7 +481,7 @@ export const Transaction=(handleButtonClick)=>{
             {activelabel === 'File' && (<div className={`h-full w-[calc(100%-900px)] relative -mr-[6px]  `}><Addfile data={savedData} /></div>)}
 
 
-            <div className={''}><FormTransaction activelabel={activelabel} setactivelabel={setactivelabel} savedData={savedData} setSavedData={setSavedData}  /></div></div>)
+            <div className={''}><FormTransaction activelabel={activelabel} setactivelabel={setactivelabel} savedData={savedData} setSavedData={setSavedData}  showform={showform}/></div></div>)
 
 
 

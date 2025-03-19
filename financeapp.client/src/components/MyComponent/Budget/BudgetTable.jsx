@@ -81,7 +81,7 @@ const BudgetData = ({ handleeventPiecomponent, getData, setData }) => {
             cellRenderer:(params) => {
                 return (
 
-                    <div className={'m-0 p-0 bg-[#121212] object-contain w-[75%] h-[70%] items-center flex justify-center rounded-full overflow-hidden'}><img className={'w-[70%] h-[70%] object-contain'}  src={`src/assets/Budget/${params.data.category}.svg`} onError={(e) => e.target.src = 'src/assets/Budget/car.svg'}/></div>
+                    <div className={'m-0 p-0 bg-[#121212] object-contain w-[75%] h-[70%] items-center flex justify-center rounded-full overflow-hidden flex-col'}><img className={'w-[70%] h-[70%] object-contain'}  src={`src/assets/Budget/${params.data.category}.svg`} onError={(e) => e.target.src = 'src/assets/Budget/car.svg'}/><div className={' bottom-0 text-[15px] absolute font-bold'}>{params.data.category}</div></div>
 
 
                 )
@@ -417,7 +417,7 @@ const BudgetData = ({ handleeventPiecomponent, getData, setData }) => {
 
             </div>
 
-            {showComponent && <Transaction />}
+            {showComponent && <Transaction hideform={setShowComponent}/>}
 
         </div>
         );

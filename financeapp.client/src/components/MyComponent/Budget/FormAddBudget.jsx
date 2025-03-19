@@ -11,17 +11,21 @@ import {BudgetIcon, LoanIcon} from "@/assets/overall/OverAllSVG.jsx";
 import { Switch } from "@/components/ui/switch.tsx"
 
 import { Label } from "@/components/ui/label"
+import {PostBudgetApi} from "@/components/MyComponent/Services/ApiServiceBudget.jsx";
+import {toast} from "react-toastify";
 
-const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, inpuref}) => {
+const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, hideform}) => {
     const currentDate = new Date().toLocaleDateString();
 
-    const [dob, setDob] = useState(null);
+    const [dob, setDob] = useState(new Date());
 
     const [path, setpath] = useState('relative bottom-[120px] right-[25px] space-x-0 flex-row justify-start');
 
     const formRef = useRef();
 
-
+    const [Interval, setInterval] = useState(0);
+    const [switchButton, setSwitchButton] = useState("repeater");
+    
     const handleactivelabel = (activelabel) => {
 
 
@@ -29,38 +33,75 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
 
 
     }
+    
+    
+    
+    const [BudgetData, setBudgetData] = useState({
+        category: "",
+        name: "",
+        repeater: "",
+        interval: "",
+        limitAmount: "",
+        startDate: "",
+        description: "",
+    });
 
-
-    const handlesavedData = (inputRefs) => {
-
-
-
-
-        const values = Object.keys(inputRefs).map(key => ({
-            name: key,  // the key name (e.g., "Type")
-            value: inputRefs[key].current ? inputRefs[key].current.value : '',
+    const handleChange = async (e) => {
+        const {name, value} = e.target;
+        await setBudgetData((prevBudget) => ({
+            ...prevBudget,
+            [name]: value,
         }));
 
 
-        const resultObject = values.reduce((acc, { name, value }) => {
-            acc[name] = value;
-            return acc;
-        }, {});
-
-
-        const arrays = Object.values(resultObject);
-
-        console.log(arrays);
-        console.log('hihiih');
-
-
-        setSavedData(prevData => [...prevData, arrays]);
-
-
-
-        formRef.current.reset();
-
     }
+    useEffect(() => {
+
+        setBudgetData((prevState) => ({
+            ...prevState,
+            startDate: dob,
+        }));
+        
+    }, [dob])
+    
+    useEffect(() => {
+
+        setBudgetData((prevState) => ({
+            ...prevState,
+            interval: Interval,
+        }));
+    }, [Interval])
+
+    useEffect(() => {
+
+        setBudgetData((prevState) => ({
+            ...prevState,
+            repeater: switchButton,
+        }));
+    }, [switchButton]);
+    
+    useEffect(() => {
+        
+        
+        console.log(BudgetData);
+    }, [BudgetData]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if(Interval<1){
+            toast.error("Interval must be at least one")
+            return
+        }
+        
+        PostBudgetApi(BudgetData).then((res)=> {
+            
+            console.log(res);
+        });
+        
+        
+    }
+    
     const marks = [
         {
             value: 0,
@@ -98,10 +139,15 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
     function valuetext(value) {
         return `${value}°C`;
     }
-    console.log(inpuref)
-    console.log('newewewe')
-    console.log(inpuref)
-    console.log('inpureftcash')
+    
+    const handleSwitchChange=()=>{
+        
+        
+        setSwitchButton((prevstate)=>{
+            return prevstate==="repeater"?"notRepeat":"repeater";
+        });
+    }
+    
 
     return (
         <div className={` text-center w-[550px] h-[550px] bg-[#3A3535] rounded-[9px]  border-green-500 border shadow-lg shadow-black z-50`}>
@@ -113,7 +159,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
 
             </div>
 
-            <form className=' relative bottom-[230px] flex flex-col justify-center items-center' ref={formRef}>
+            <form className=' relative bottom-[230px] flex flex-col justify-center items-center' onSubmit={handleSubmit}>
 
 
                 <div className={'flex flex-row '}>
@@ -122,11 +168,15 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                             <div className="flex flex-col relative w-[400px]">
                                 <label
                                     className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Category</label>
-                                <input type="text" placeholder="Name" maxLength={40}
-                                       className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Name} />
+                                <input type="text" placeholder="Category" maxLength={40}
+                                       className="w-full rounded-[9px] border-green-500 border p-2"  required  value={BudgetData.category} name="category" onChange={handleChange} />
                             </div>
                             <div className="flex items-center space-x-2">
-                                <Switch color='#FF0000' id="airplane-mode"  />
+                                <Switch color='#FF0000' id="airplane-mode"
+                                        checked={switchButton === "repeater"}
+                                        onCheckedChange={()=>{handleSwitchChange()}}
+                                
+                                />
                                 <Label htmlFor="airplane-mode">Airplane Mode</Label>
                             </div>
 
@@ -135,8 +185,8 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                             <div className="flex flex-col relative w-[400px]">
                                 <label
                                     className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Name</label>
-                                <input type="type" placeholder="Loan"  maxLength={15}
-                                       className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Loan}/>
+                                <input type="type" placeholder="Name"  maxLength={40}  required  
+                                       className="w-full rounded-[9px] border-green-500 border p-2" value={BudgetData.name} name="name" onChange={handleChange}/>
                             </div>
 
                         </div>
@@ -147,6 +197,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                                 aria-label="Restricted values"
                                 defaultValue={30}
                                 getAriaValueText={valuetext}
+                                value={Interval} onChange={(e, newValue)=>setInterval(newValue)}
                                 max={365}
                                 step={1}
                                 valueLabelDisplay="auto"
@@ -165,14 +216,14 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                             <div className="flex flex-col relative w-[250px]">
                                 <label
                                     className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Budget</label>
-                                <input type="number" placeholder="Budget"  maxLength={15}
-                                       className="w-full rounded-[9px] border-green-500 border p-2" ref={inpuref.IR}/>
+                                <input type="number" placeholder="Budget"  maxLength={15} max={1000000} required  min={0}
+                                       className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" value={BudgetData.limitAmount} name="limitAmount" onChange={handleChange}/>
                             </div>
                             <div className="flex flex-col relative w-[170px]">
                                 <label
-                                    className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">End Date</label>
+                                    className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Start Date</label>
 
-                                <CalendarForm  className='bg-black' dob={dob} setDob={setDob} ref={inpuref.EndDate} ></CalendarForm>
+                                <CalendarForm  className='bg-black' dob={dob} setDob={setDob}  ></CalendarForm>
 
                             </div>
                         </div>
@@ -196,7 +247,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
                             className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b" >Notes</label>
                         <textarea
                             placeholder="Comment" maxLength={300}
-                            className="w-full h-full rounded-[9px] border-green-500 border p-2" ref={inpuref.Notes}
+                            className="w-full h-full rounded-[9px] border-green-500 border p-2" value={BudgetData.description} name="description" onChange={handleChange}
                         ></textarea>
                     </div>
 
@@ -208,7 +259,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, i
 
                 <div className='flex flex-row gap-3 w-[400px] mr-5'>
                     <button type="button"
-                            className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={() => window.location.reload()}>Cancel
+                            className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={()=>hideform(false)}>Cancel
                     </button>
 
                     <button type="submit"
@@ -312,7 +363,7 @@ const Addfile=({inpuref})=> {
 
 
 
-export const Transaction=(handleButtonClick)=>{
+export const Transaction=({handleButtonClick, hideform})=>{
 
 
     const [activelabel, setactivelabel] = useState(null);
@@ -363,7 +414,7 @@ export const Transaction=(handleButtonClick)=>{
         {activelabel === 'File' && (<div className={`h-full w-[calc(100%-900px)] relative -mr-[6px]  `}><Addfile data={savedData} inpuref={inputRefs}/></div>)}
 
 
-        <div className={''}><FormTransaction activelabel={activelabel} setactivelabel={setactivelabel} savedData={savedData} setSavedData={setSavedData} inpuref={inputRefs} /></div></div>)
+        <div className={''}><FormTransaction activelabel={activelabel} setactivelabel={setactivelabel} savedData={savedData} setSavedData={setSavedData} inpuref={inputRefs} hideform={hideform}/></div></div>)
 
 
 

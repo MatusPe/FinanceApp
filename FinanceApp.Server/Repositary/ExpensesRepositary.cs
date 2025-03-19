@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel;
+using Microsoft.EntityFrameworkCore;
 using ReactApp2.Server.DateBase;
 using ReactApp2.Server.DTOs;
 using ReactApp2.Server.Entity;
@@ -125,40 +126,39 @@ public class ExpensesRepositary:IExpensesRepositary
 
         Console.WriteLine($"First Day of Month (UTC): {firstDayOfMonthUtc}");
         Console.WriteLine($"Last Day of Month (UTC): {lastDayOfMonthUtc}");
-        
-        var filteredExpenses = _context.Expenses
-            .Where(e => e.Date >= firstDayOfMonthUtc && e.Date <= lastDayOfMonthUtc) // Filter by the given month
-            .OrderByDescending(x => x.Price);
-        
-        var top12 = await filteredExpenses.Take(12) // Limit to top 12
-            .Select(e => new ExpensesDTOforPiegraph
-            {
-                Category = e.Category,
-                Price = e.Price
-            })
-            .ToListAsync(); // Materialize the result
 
-        var other = await filteredExpenses.Skip(12).SumAsync(e => e.Price); // Get the sum of the rest
+        var filteredExpenses = await _context.Expenses
+            .Where(e => e.Date >= firstDayOfMonthUtc && e.Date <= lastDayOfMonthUtc).GroupBy(e => e.Category).Select(
+                e => new ExpensesDTOforPiegraph
+                {
+                    Category = e.Key,
+                    Price = e.Sum(h => h.Price)
+                }).OrderByDescending(e => e.Price).ToListAsync();
 
-        if (other > 0) // Add "Other" row only if there are remaining expenses
+        var main = filteredExpenses.Take(11).ToList();
+        if (filteredExpenses.Count() > 11)
         {
-            top12.Add(new ExpensesDTOforPiegraph()
-            {
-                Category = "Other",
-                Price = other
-            });
-        }
-
-        var groupedByCategory = top12
-            .GroupBy(e => e.Category)
-            .Select(g => new ExpensesDTOforPiegraph
-            {
-                Category = g.Key,
-                Price = g.Sum(e => e.Price)
-            })
-            .ToList();
+            var other = 
         
-        return groupedByCategory;
+                    new ExpensesDTOforPiegraph
+                    {
+                        Category = "Other", // Napríklad "Other", ak ide o zvyšok
+                        Price = filteredExpenses.Skip(11).Sum(e => e.Price)
+                    }
+                ;
+            main.Add(other);
+        }
+        
+        
+        return main;
+        
+        
+        
+        
+        
+        
+        
+       
         
         
     }

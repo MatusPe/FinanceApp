@@ -181,6 +181,10 @@ export function PieChartComponent() {
                                 <stop offset="0%" stopColor="#3f51b5" stopOpacity={1} />  {/* Deep Blue */}
                                 <stop offset="100%" stopColor="#00bcd4" stopOpacity={1} /> {/* Light Cyan Blue */}
                             </linearGradient>
+                            <linearGradient id="darkBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00bcd4" stop-opacity="1" />
+                                <stop offset="90%" stop-color="#0000ff" stop-opacity="1" />
+                            </linearGradient>
                             
                         </defs>
 
@@ -193,6 +197,8 @@ export function PieChartComponent() {
                             strokeWidth={2}
                             fill="url(#gradient1)"
                         >
+                            
+                            
                             <Cell fill="url(#PurpleDream)" />
                             <Cell fill="url(#VioletPurple)" />
                             <Cell fill="url(#DeepPurpleViolet)" />
@@ -203,6 +209,7 @@ export function PieChartComponent() {
                             <Cell fill="url(#GreenToLightBlueBridge)" />
                             <Cell fill="url(#OceanBlueToGreen)" />
                             <Cell fill="url(#BlueDream)" />
+                            <Cell fill="url(#darkBlue)" />
                             
 
                             <Label

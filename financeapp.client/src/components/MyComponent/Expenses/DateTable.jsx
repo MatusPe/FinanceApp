@@ -123,7 +123,7 @@ const ExpensesData = () => {
         },cellStyle: { padding: 0, margin: 0 }
         },
         { field: "name" , rowGroup:true, width:120,filter: "agTextColumnFilter", editable: true, cellStyle: {  fontSize:'16px', fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2'} , },
-        { field: "Receiver", width:100, filter: "agTextColumnFilter", editable: true, cellStyle: {  fontSize:'12px',fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2', color: "gray",} },
+        { field: "receiver", width:100, filter: "agTextColumnFilter", editable: true, cellStyle: {  fontSize:'12px',fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2', color: "gray",} },
         { field: "price", width:100,editable: true,filter: "agNumberColumnFilter",  cellStyle: {  fontSize:'16px', fontWeight: 'bold',whiteSpace: 'normal', wordWrap: 'break-word',lineHeight: '1.2', display: 'flex', justifyContent: 'center',alignItems: 'center'},
             cellRenderer: (params) => {
 

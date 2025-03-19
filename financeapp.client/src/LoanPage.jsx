@@ -90,7 +90,7 @@ function LoanPage(){
             console.log("Selected Rows:", selectedRows);
             const selectedLoanIds = selectedRows.map(row => row.id);
             console.log('this is selectedLoanIds:', selectedLoanIds);
-            if(selectedRows.length > 0){
+            if(selectedRows.length > 0&&selectedRows.length<5){
                 setSelectedData(selectedRows);
                 setListofLoanId(selectedLoanIds);
                 console.log(selectedLoanIds, 'this is loans');

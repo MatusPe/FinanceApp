@@ -9,7 +9,7 @@ public class Budget
     
     public String Name{get;set;}
     public Double LimitAmount { get; set; }
-    public String Status { get; set; }
+    public String? Status { get; set; }
     public DateTime StartDate { get; set; }
    
     public String repeater  { get; set; }
