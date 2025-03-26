@@ -1,5 +1,7 @@
+using FinanceApp.Server;
 using FinanceApp.Server.Models;
 using FinanceApp.Server.Service;
+using FinanceApp.Server.WebSocket;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-
+builder.Services.AddSingleton<AlpacaWebSocketClient>();
 //Register
 builder.Services.AddDbContext<ApplicationDbContext>(options=>
 {
@@ -54,6 +56,7 @@ builder.Services.AddAuthentication(options =>
             context.Token = null;
             // Check if the request contains the "token" cookie
             var token = context.Request.Cookies["token"];
+            var path = context.HttpContext.Request.Path;
             if (!string.IsNullOrEmpty(token))
             {
                 context.Token = token;
@@ -84,22 +87,28 @@ builder.Services.AddScoped<IExpensesRepositary, ExpensesRepositary>();
 builder.Services.AddScoped<ICashRepositary, CashRepositary>();
 builder.Services.AddScoped<ITransactionRepositary, TransactionRepositary>();
 builder.Services.AddScoped<ILoanRepositary, LoanRepositary>();
+builder.Services.AddHttpClient<ITrading212Repositary, Trading212Repositary>();
 
-
+builder.Services.AddSignalR();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin()  // Allow requests from any origin
+        policy => policy.WithOrigins("https://localhost:53368")  // Allow requests from any origin
             .AllowAnyHeader()   // Allow any headers
-            .AllowAnyMethod()); 
+            .AllowAnyMethod()
+            .AllowCredentials()); 
 });
 
 var app = builder.Build();
 app.UseCors("AllowAll");
+app.MapControllers();
+app.MapHub<AlpacaHub>("/hubs/alpaca");
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

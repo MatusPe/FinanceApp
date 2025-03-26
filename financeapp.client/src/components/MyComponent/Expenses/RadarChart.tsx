@@ -136,6 +136,7 @@ function RadarComponent() {
                                         const originalData = ChartData.find(data => data.category === item.payload.category);
                                         console.log(originalData, 'this is it')
                                         console.log(item);
+                                        console.log(name, 'hakalo');
                                         return (
                                             <>
                                                 <div

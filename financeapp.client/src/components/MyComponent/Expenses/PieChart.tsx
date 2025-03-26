@@ -127,10 +127,7 @@ export function PieChartComponent() {
                 >
 
                     <PieChart className="flex-col  m-0 p-0   ">
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel/>}
-                        />
+                        
 
                         
 
@@ -187,7 +184,7 @@ export function PieChartComponent() {
                             </linearGradient>
                             
                         </defs>
-
+                        
                         <Pie
                             data={charData}
                             dataKey="price"
@@ -262,18 +259,43 @@ export function PieChartComponent() {
 
 
                             />
+                            
 
                         </Pie>
+                        <ChartTooltip
+                            cursor={false}
+                            indicator="line"
+                            content={({ payload }) => {
+                                if (!payload || payload.length === 0) return null; // Prevents errors when tooltip is empty
+                                console.log(payload, 'this is payload');
+                                return (
+                                    <div className="backdrop-blur-lg bg-black/90 p-2 rounded-[9px] border-green-500 text-white">
+                                        {payload.map((entry, index) => (
+                                            <div key={index} className="flex justify-between gap-2">
+                                                {/* Small block with color */}
+                                                
+                                                <span>{entry.name}</span>
+                                                <span className="font-bold">{entry.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                );
+                            }}
+                        />
+                        
                         <Legend
+                            
                             layout="vertical"
                             align="right"
                             verticalAlign="middle"
-                            wrapperStyle={{paddingLeft: 20}}
+                            wrapperStyle={{paddingLeft: 20, color: 'white' }}
                             iconType="circle"
+                            
                         />
 
 
                     </PieChart>
+                    
 
 
                 </ChartContainer>

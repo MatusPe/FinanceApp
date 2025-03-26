@@ -17,7 +17,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import React from "react"
+import React, {useEffect} from "react"
 const chartData = [
     { month: "January", desktop: 186, mobile: 80, tablet: 50, other: 20 },
     { month: "February", desktop: 305, mobile: 200, tablet: 90, other: 30 },
@@ -45,7 +45,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function MultipleComponent({header}) {
+export function MultipleComponent({header, getData, keydata}) {
 
 
     const headervalue=()=>{
@@ -57,6 +57,30 @@ export function MultipleComponent({header}) {
             return "Percentual Profit comparison"
         }
     }
+    
+    const [linekey, setLinekey] = React.useState<string[]>([])
+    useEffect(() => {
+        console.log(getData[0])
+        const allMonths = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        // Convert getData into an object for fast lookup
+        const dataMap = getData.reduce((acc, item) => {
+            acc[item.month] = item;
+            return acc;
+        }, {});
+
+        // Ensure each month exists, filling missing months with defaults
+        const filledData = allMonths.map((month) =>
+            dataMap[month] ? dataMap[month] : { month, ...keydata.reduce((acc, key) => ({ ...acc, [key]: 0 }), {}) }
+        );
+
+        setLinekey(filledData);
+        
+        
+    }, [getData])
 
     const lineKeys = Object.keys(chartData[0]).slice(1);
     const LINE_COLORS = [
@@ -64,7 +88,10 @@ export function MultipleComponent({header}) {
         "#2ecc71", "#e74c3c", "#3498db", "#1abc9c", "#e67e22", "#95a5a6"
     ];
 
-
+    const allMonths = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
     return (
         <Card className=" h-full border-none ">
             <CardHeader className={'text-white'}>
@@ -75,10 +102,10 @@ export function MultipleComponent({header}) {
                 <ChartContainer config={chartConfig} className="w-[100%] h-[60%] mx-auto my-auto">
                     <LineChart
                         accessibilityLayer
-                        data={chartData}
+                        data={linekey}
                         margin={{
-                            left: 12,
-                            right: 12,
+                            
+                            
                         }}
 
                     >
@@ -89,9 +116,11 @@ export function MultipleComponent({header}) {
                             axisLine={false}
                             tickMargin={8}
                             tickFormatter={(value) => value.slice(0, 3)}
+                            domain={[0, allMonths.length - 1]}
+                            ticks={allMonths}
                         />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                        {lineKeys.map((key, index) => (
+                        {keydata.map((key, index) => (
                             <Line
                                 key={key}
                                 dataKey={key}
@@ -99,6 +128,7 @@ export function MultipleComponent({header}) {
                                 stroke={LINE_COLORS[index % LINE_COLORS.length]} // Dynamically assign color
                                 strokeWidth={2}
                                 dot={false}
+                                
                             />
                         ))}
                     </LineChart>

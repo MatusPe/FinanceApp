@@ -159,25 +159,25 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, h
 
             </div>
 
-            <form className=' relative bottom-[230px] flex flex-col justify-center items-center' onSubmit={handleSubmit}>
+            <form className=' relative bottom-[230px] flex flex-col justify-center items-center gap-2' onSubmit={handleSubmit}>
 
 
-                <div className={'flex flex-row '}>
-                    <div className='w-[400px] mr-5'>
-                        <div className='flex flex-row gap-3 w-[400px] h-[30px] rounded-[9px] mb-5'>
+                <div className={'flex flex-row gap-3'}>
+                    <div className='w-[400px] mr-5 gap-6 '>
+                        <div className='flex flex-row gap-6 w-[400px] h-[30px] rounded-[9px] mb-6'>
                             <div className="flex flex-col relative w-[400px]">
                                 <label
                                     className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Category</label>
                                 <input type="text" placeholder="Category" maxLength={40}
-                                       className="w-full rounded-[9px] border-green-500 border p-2"  required  value={BudgetData.category} name="category" onChange={handleChange} />
+                                       className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A]"  required  value={BudgetData.category} name="category" onChange={handleChange} />
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-2 text-white">
                                 <Switch color='#FF0000' id="airplane-mode"
                                         checked={switchButton === "repeater"}
                                         onCheckedChange={()=>{handleSwitchChange()}}
                                 
                                 />
-                                <Label htmlFor="airplane-mode">Airplane Mode</Label>
+                                <Label htmlFor="airplane-mode">Repeatable</Label>
                             </div>
 
                         </div>
@@ -186,7 +186,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, h
                                 <label
                                     className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Name</label>
                                 <input type="type" placeholder="Name"  maxLength={40}  required  
-                                       className="w-full rounded-[9px] border-green-500 border p-2" value={BudgetData.name} name="name" onChange={handleChange}/>
+                                       className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A]" value={BudgetData.name} name="name" onChange={handleChange}/>
                             </div>
 
                         </div>
@@ -219,9 +219,9 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, h
                                 <input type="number" placeholder="Budget"  maxLength={15} max={1000000} required  min={0}
                                        className="w-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" value={BudgetData.limitAmount} name="limitAmount" onChange={handleChange}/>
                             </div>
-                            <div className="flex flex-col relative w-[170px]">
+                            <div className="text-white flex flex-col relative w-[170px] ">
                                 <label
-                                    className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Start Date</label>
+                                    className="absolute top-[-12px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b">Start Date</label>
 
                                 <CalendarForm  className='bg-black' dob={dob} setDob={setDob}  ></CalendarForm>
 
@@ -247,7 +247,7 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, h
                             className="absolute top-[-10px] left-5 text-green-500 bg-gradient-to-t from-[#3A3535] to-[#3A3535]  rounded-b-[9px]  border-b-green-500 border-b" >Notes</label>
                         <textarea
                             placeholder="Comment" maxLength={300}
-                            className="w-full h-full rounded-[9px] border-green-500 border p-2" value={BudgetData.description} name="description" onChange={handleChange}
+                            className="w-full h-full rounded-[9px] border-green-500 border p-2 bg-[#2D2A2A]" value={BudgetData.description} name="description" onChange={handleChange}
                         ></textarea>
                     </div>
 
@@ -259,11 +259,11 @@ const FormTransaction = ({activelabel,setactivelabel, savedData, setSavedData, h
 
                 <div className='flex flex-row gap-3 w-[400px] mr-5'>
                     <button type="button"
-                            className='w-[80px] h-[40px] bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={()=>hideform(false)}>Cancel
+                            className='w-[80px] h-[40px] text-white bg-[#3A3535] hover:scale-110 transition-transform duration-300 ' onClick={()=>hideform(false)}>Cancel
                     </button>
 
                     <button type="submit"
-                            className='w-[300px] h-[40px] bg-green-500 hover:scale-110 transition-transform duration-300'>Submit
+                            className='w-[300px] h-[40px] text-white bg-green-500 hover:scale-110 transition-transform duration-300'>Submit
                     </button>
                 </div>
             </form>

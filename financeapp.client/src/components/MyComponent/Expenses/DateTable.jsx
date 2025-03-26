@@ -19,6 +19,7 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { Box } from "@mui/material";
 import {DeleteExpensesApi, UpdateExpensesApi, UpdateonlyExpensesApi} from "@/components/MyComponent/Services/ApiService.jsx";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const api="https://localhost:44301/";
 const ExpensesData = () => {
@@ -286,6 +287,7 @@ const ExpensesData = () => {
         
         console.log(event);
     };
+    
 
     
 
@@ -351,10 +353,23 @@ const ExpensesData = () => {
 
 
 
+                <Dialog open={showComponent} onOpenChange={setShowComponent} >
+                    <DialogContent className=" border-none">
+    
+                {showComponent && <div className={''}> <Transaction setshowcomponent={setShowComponent} /></div>}
+    
+                    </DialogContent>
+    
+                </Dialog>
 
 
-            {showComponent && <div className={''}> <Transaction setshowcomponent={setShowComponent} /></div>}
+            <Dialog open={showDetail} onOpenChange={setShowDetail} >
+                <DialogContent className=" border-none">    
             {showDetail&& <div className={''}> <Detail data={ExpensesDetail} setshowcomponent={setShowDetail}></Detail></div>}
+
+                </DialogContent>
+
+            </Dialog>
             
 
         

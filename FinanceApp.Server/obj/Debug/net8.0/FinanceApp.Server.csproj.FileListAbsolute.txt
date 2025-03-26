@@ -164,12 +164,12 @@ C:\Users\matus\Programs\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\refint\Fin
 C:\Users\matus\Programs\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\FinanceApp.Server.pdb
 C:\Users\matus\Programs\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\FinanceApp.Server.genruntimeconfig.cache
 C:\Users\matus\Programs\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\ref\FinanceApp.Server.dll
+C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\spa.proxy.json
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\appsettings.json
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\package-lock.json
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\package.json
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\FinanceApp.Server.staticwebassets.endpoints.json
-C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\spa.proxy.json
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\FinanceApp.Server.exe
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\FinanceApp.Server.deps.json
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\FinanceApp.Server.runtimeconfig.json
@@ -235,6 +235,7 @@ C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\Syste
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\System.IO.Pipelines.dll
+C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\System.Security.Cryptography.Xml.dll
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\System.Text.Encodings.Web.dll
@@ -331,3 +332,8 @@ C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\refin
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\FinanceApp.Server.pdb
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\FinanceApp.Server.genruntimeconfig.cache
 C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\obj\Debug\net8.0\ref\FinanceApp.Server.dll
+C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\Microsoft.AspNetCore.Connections.Abstractions.dll
+C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\Microsoft.AspNetCore.SignalR.Client.Core.dll
+C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\Microsoft.AspNetCore.SignalR.Common.dll
+C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\Microsoft.AspNetCore.SignalR.Protocols.Json.dll
+C:\Users\matus\RiderProjects\FinanceApp\FinanceApp.Server\bin\Debug\net8.0\Microsoft.Extensions.Features.dll

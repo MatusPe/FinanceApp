@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button"
 import {useEffect, useState} from "react";
 import Screenpiegraph from "@/components/MyComponent/Budget/graphscreen.jsx";
 import {GetBudgetByUserApi} from "@/components/MyComponent/Services/ApiServiceBudget.jsx";
+import {Dialog, DialogContent} from "@/components/ui/dialog.jsx";
 
 
 
@@ -16,7 +17,7 @@ function BudgetPage() {
     const [showPieComponent, setPieComponent] = useState(false);
     
     const [PickedName, setPickedName] = useState();
-    const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
+    
     const [getData, setGetData] = useState([]);
     const [Duration, setDuration] = useState(0);
     const [Budgeted, setBudgeted] = useState(0);
@@ -84,39 +85,13 @@ function BudgetPage() {
     const handleeventPiecomponent = (event, name, duration) => {
         setPieComponent(!showPieComponent);
         setPickedName(name);
-        console.log( duration, 'tryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
+        
         setDuration(duration);
-        setButtonPosition({ x: event.clientX, y: event.clientY });
+        
 
     };
 
-    useEffect(() => {
-
-
-
-        const handleclickedevent = () => {
-
-            setPieComponent(false);
-
-
-            console.log(buttonPosition);
-            console.log('++++++++++++++++');
-        }
-
-        if (showPieComponent) {
-
-            document.addEventListener("mousedown", handleclickedevent);
-        }else{
-            document.removeEventListener("mousedown", handleclickedevent);
-        }
-        return () => {
-            document.removeEventListener("mousedown", handleclickedevent);
-        }
-
-
-
-
-    }, [ showPieComponent]);
+    
 
     return (<div><div className="flex row h-screen"><SidebarDemo></SidebarDemo>
         <div className={'flex flex-grow h-full w-full  flex-row  bg-[#24232a] p-4'}>
@@ -156,7 +131,13 @@ function BudgetPage() {
 
 
             </div>
-            {showPieComponent&&<Screenpiegraph  Name={PickedName} duration={Duration} position={buttonPosition}>{buttonPosition}</Screenpiegraph>}
+            
+            <Dialog open={showPieComponent} onOpenChange={setPieComponent}>
+                <DialogContent className=" border-none">
+                    {showPieComponent&&<Screenpiegraph  Name={PickedName} duration={Duration} ></Screenpiegraph>}
+                    </DialogContent>
+            </Dialog>
+            
         </div>
 
     </div></div>)

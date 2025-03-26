@@ -16,6 +16,7 @@ import {Transaction} from "@/components/MyComponent/Budget/FormAddBudget.jsx";
 import {DeleteExpensesApi, UpdateonlyExpensesApi} from "@/components/MyComponent/Services/ApiService.jsx";
 import {toast} from "react-toastify";
 import {DeleteBudgetApi, UpdateBudgetApi} from "@/components/MyComponent/Services/ApiServiceBudget.jsx";
+import {DialogContent, Dialog} from "@/components/ui/dialog.jsx";
 
 
 
@@ -417,7 +418,13 @@ const BudgetData = ({ handleeventPiecomponent, getData, setData }) => {
 
             </div>
 
+        <Dialog open={showComponent} onOpenChange={setShowComponent} >
+            <DialogContent className=" border-none">
             {showComponent && <Transaction hideform={setShowComponent}/>}
+
+            </DialogContent>
+
+        </Dialog>
 
         </div>
         );

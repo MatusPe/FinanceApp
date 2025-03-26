@@ -10,6 +10,7 @@ import {Transaction} from "@/components/MyComponent/Loan/FormLoanAdd.jsx";
 import {DeleteLoanApi, UpdateLoanApi} from "../Services/ApiServiceLoan.jsx";
 import {UpdateonlyExpensesApi} from "@/components/MyComponent/Services/ApiService.jsx";
 import {toast} from "react-toastify";
+import {Dialog, DialogContent} from "@/components/ui/dialog.jsx";
 
 
 const LoanData = ({getdata, setData, gridRef}) => {
@@ -368,8 +369,12 @@ const LoanData = ({getdata, setData, gridRef}) => {
                 <img src="src/assets/list-plus.svg" alt="Transaction" className="w-full h-full object-contain" />
 
             </div>
-            {showComponent && <Transaction showform={setShowComponent} />}
 
+        <Dialog open={showComponent} onOpenChange={setShowComponent} >
+            <DialogContent className=" border-none">
+            {showComponent && <Transaction showform={setShowComponent} />}
+            </DialogContent>
+            </Dialog>
         </div>
         );
 

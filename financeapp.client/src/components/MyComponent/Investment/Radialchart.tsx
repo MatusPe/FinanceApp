@@ -18,7 +18,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
-import React from "react"
+import React, {useEffect} from "react"
 const chartData = [
     { browser: "safari", visitors: 200, fill: "#22c55e" },
 
@@ -34,7 +34,25 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function RadialComponent() {
+export function RadialComponent({getData}) {
+    
+    const [sum, setSum] = React.useState(0)
+    const [value, setValue] = React.useState(0)
+    useEffect(() => {
+        console.log(getData, 'this isrggg')
+        const totalMarketValue = getData.reduce((sum, element) => sum + element.market_value, 0);
+
+        const totalMarketValune = getData.reduce((suma, element) => suma + (element.market_value/(totalMarketValue))**2, 0);
+        setValue(totalMarketValune*365);
+        
+        
+        
+    }, [getData]);
+
+   
+    useEffect(() => {
+        console.log(value,'value');
+    }, [value]);
     return (
         <Card className="flex flex-col border-none w-full h-full items-center justify-center">
             <CardHeader className="items-center p-0 m-0 text-white">
@@ -49,7 +67,7 @@ export function RadialComponent() {
                     <RadialBarChart
                         data={chartData}
                         startAngle={0}
-                        endAngle={250}
+                        endAngle={value}
                         innerRadius={80}
                         outerRadius={110}
 
@@ -84,14 +102,14 @@ export function RadialComponent() {
                                                     className=" text-4xl font-bold"
                                                     fill="white"
                                                 >
-                                                    {chartData[0].visitors.toLocaleString()}
+                                                    {Math.round(value/365*100)}%
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={(viewBox.cy || 0) + 24}
                                                     className="fill-muted-foreground"
                                                 >
-                                                    Visitors
+                                                    Diversification
                                                 </tspan>
                                             </text>
                                         )

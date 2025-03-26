@@ -17,22 +17,8 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import React from "react"
-const chartData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
-    { month: "July", desktop: 250, mobile: 160 },
-    { month: "August", desktop: 195, mobile: 110 },
-    { month: "September", desktop: 220, mobile: 150 },
-    { month: "October", desktop: 275, mobile: 170 },
-    { month: "November", desktop: 300, mobile: 180 },
-    { month: "December", desktop: 325, mobile: 190 }
+import React, {useEffect, useState} from "react"
 
-]
 
 const chartConfig = {
     desktop: {
@@ -45,7 +31,23 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function LineComponentInvestment({header}) {
+export function LineComponentInvestment({header, getData}) {
+
+    
+    const [chartData, setChartData] = useState<ChartConfig>()
+    const [graphTitleData, setgraphTitleData] = useState<string>()
+    useEffect(() => {
+        
+        setChartData(getData)
+    }, [getData]);
+    useEffect(() => {
+        if(header=="Money Profit") {
+            setgraphTitleData("totalProfitLoss")
+        }else{
+            setgraphTitleData("totalProfitLossPct")
+        }
+    }, []);
+    
     return (
         <Card className={'border-none'}>
             <CardHeader>
@@ -75,7 +77,7 @@ export function LineComponentInvestment({header}) {
                             content={<ChartTooltipContent hideLabel />}
                         />
                         <Line
-                            dataKey="desktop"
+                            dataKey={graphTitleData}
                             type="natural"
                             stroke="#22c55e"
                             strokeWidth={2}

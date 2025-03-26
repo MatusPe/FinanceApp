@@ -20,7 +20,7 @@ import "react-toastify/dist/ReactToastify.css"
 
 createRoot(document.getElementById('root')).render(
 
-    <StrictMode>
+    
         <Router>
             <ToastContainer />
             <HeaderApp /> {/* This can be consistent across pages */}
@@ -37,5 +37,5 @@ createRoot(document.getElementById('root')).render(
             </Routes>
         </Router>
 
-    </StrictMode>,
+    ,
 )
